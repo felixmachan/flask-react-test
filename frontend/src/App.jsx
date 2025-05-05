@@ -6,7 +6,7 @@ import Footer from "./components/Footer.jsx";
 import Appointments from './components/Appointments.jsx';
 import { BsHeartPulseFill } from "react-icons/bs";
 import Contact from './components/Contact.jsx';
-
+import Home from './components/Home.jsx';
 // 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 function NavigateButtonWrapper({ children }) {
   const navigate = useNavigate();
@@ -32,20 +32,7 @@ function App() {
       <Router>
         <BasicExample />
         <Routes>
-          <Route path="/" element={
-            <NavigateButtonWrapper>
-              {(handleButtonClick) => (
-                <Hero
-                  title="Kényeztetés a mindennapokban"
-                  body="A lelki és testi egészség megőrzéséért." 
-                  icon={<BsHeartPulseFill className="hero-icon" />}
-                  showButton={true}
-                  buttonText="Időpontot foglalok"
-                  buttonAction={handleButtonClick}
-                />
-              )}
-            </NavigateButtonWrapper>
-          } />
+          <Route path="/" element={<Home />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
