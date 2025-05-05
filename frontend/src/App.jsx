@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import BasicExample from './components/Navbar';
 import Hero from './components/Hero';
 import Footer from "./components/Footer.jsx"
-
+import Appointments from './components/Appointments.jsx'; // Időpontfoglalás oldal
 
 function App() {
   const [message, setMessage] = useState('Töltés...');
