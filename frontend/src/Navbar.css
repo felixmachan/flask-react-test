@@ -17,6 +17,35 @@
 .nav-links .nav-link {
     font-size: 1.2rem; /* vagy pl. 20px */
     font-weight: 500;  /* ha kicsit vastagabb betű kell */
+    position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+  width: fit-content; /* Csak a szöveg szélességére vonatkozzon */
   }
   /* Navbar.css */
   
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #133E87;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .nav-link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  
+    .nav-link:not(:hover)::after {
+      transform-origin: right;
+      transform: scaleX(0);
+    }
+  }
