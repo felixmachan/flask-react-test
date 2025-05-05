@@ -19,6 +19,7 @@ function Contact() {
         icon={<IoIosContact className="hero-icon" />}
         showButton={true}
         buttonText="Hívj fel!"
+        href="tel:+36702310212"
         />
         <div className="contact-container-outer">
         <div className="contact-container-inner">
