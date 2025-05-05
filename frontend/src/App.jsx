@@ -7,15 +7,8 @@ import Appointments from './components/Appointments.jsx';
 import { BsHeartPulseFill } from "react-icons/bs";
 import Contact from './components/Contact.jsx';
 import Home from './components/Home.jsx';
-// 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
-function NavigateButtonWrapper({ children }) {
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate('/appointments');
-  };
 
-  return children(handleClick); // callbackként adja vissza a navigate-es függvényt
-}
+// 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 
 function App() {
   const [message, setMessage] = useState('Töltés...');

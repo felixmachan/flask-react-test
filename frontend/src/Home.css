@@ -3,4 +3,10 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
     gap: 20px;
+    padding: 20px;
+    padding-top: 30px
+}
+
+.card{
+    height: 60%
 }
