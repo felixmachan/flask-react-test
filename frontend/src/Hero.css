@@ -1,7 +1,6 @@
 .hero{
     background-color: #608BC1;
-    width: 100vw;
-    margin-top: 100px;
+    margin-top: 0px;
 }
 
 .blue-bg{
@@ -11,4 +10,9 @@
 
 .lead{
     font-weight: 400 !important; /* Normál vastagság */
+}
+
+.hero-icon {
+    font-size: 72px; /* vagy egy másik méret */
+    color: #000; /* Ha szükséges, állítsd be a kívánt színt */
 }

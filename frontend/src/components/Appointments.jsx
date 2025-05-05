@@ -1,16 +1,16 @@
 import React from 'react';
+import Hero from './Hero'; // Importálás a Hero komponenshez
+import { MdMoreTime } from "react-icons/md";
+import "../Appointments.css"; // CSS fájl importálása
 
 function Appointments() {
     return (
-        <div className="container-fluid">
-            <div className="row justify-content-center align-items-center vh-100">
-                <div className="col-md-6 text-center">
-                    <h1 className="display-4">Időpontfoglalás</h1>
-                    <p className="lead">Kérlek, válaszd ki a kívánt időpontot!</p>
-                    {/* Itt lehetne egy időpontválasztó komponenst elhelyezni */}
-                </div>
-            </div>
-        </div>
+            <Hero 
+                title="Időpontfoglalás"
+                body="Válaszd ki a számodra legmegfelelőbb időpontot és szolgáltatást!"
+                icon={<MdMoreTime className='hero-icon'/>}
+            />
+        
     );
 }
 

@@ -1,8 +1,11 @@
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Importálás
 import { useEffect, useState } from 'react';
 import BasicExample from './components/Navbar';
 import Hero from './components/Hero';
-import Footer from "./components/Footer.jsx"
+import Footer from "./components/Footer.jsx";
 import Appointments from './components/Appointments.jsx'; // Időpontfoglalás oldal
+import { BsHeartPulseFill } from "react-icons/bs"; // Ikon importálás
+
 
 function App() {
   const [message, setMessage] = useState('Töltés...');
@@ -15,10 +18,21 @@ function App() {
   }, []);
 
   return (
-    <div class="root">
-      <BasicExample />
-      <Hero />
-      <Footer />
+    <div className="root">
+      <Router>
+        <BasicExample />
+        <Routes>
+          <Route path="/" element={
+            <><Hero
+              title="Kényeztetés a mindennapokban"
+              body="TalpPont - Talpmasszázs és egészségmegőrzés" 
+              icon={<BsHeartPulseFill className="hero-icon" />}
+            /></>
+            } />
+          <Route path="/appointments" element={<><Appointments /></>} /> {/* Időpontfoglalás */}
+        </Routes>
+        <Footer /> {/* Footer mindig ott lesz */}
+      </Router>
     </div>
   );
 }

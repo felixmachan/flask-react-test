@@ -24,9 +24,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  display: block;
   min-height: 100vh;
   background-color: #F3F3E0;
 }
@@ -70,4 +68,12 @@ button:focus-visible {
 
 .custom-navbar {
   background-color: #133E87 !important; /* Saját kék */
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+  margin-right: 0;
+  margin-left: 0;
 }
