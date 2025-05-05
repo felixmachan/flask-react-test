@@ -17,7 +17,7 @@ function Hero(props) {
   } = props;
   
   return (
-    <div className="px-4 py-5 my-0 text-center container-fluid hero w-100">
+    <div className="px-4 py-5 mb-3 text-center container-fluid hero w-100">
       <div className="d-block mx-auto mb-4 mt-3" style={{ fontSize: "72px"}}>
         {icon}
       </div>
