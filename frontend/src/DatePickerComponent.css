@@ -12,13 +12,13 @@
 }
 
 
-.react-datepicker__day:hover,
-.react-datepicker__day--selected:hover,
-.react-datepicker__day--keyboard-selected:hover {
-  background-color: #608cc181 !important;
-  border-radius: 50% !important;
-  color: white;
-}
+  .react-datepicker__day:hover,
+  .react-datepicker__day--selected:hover,
+  .react-datepicker__day--keyboard-selected:hover {
+    background-color: #608cc181 !important;
+    border-radius: 50% !important;
+    color: white;
+  }
 
 /* Fejléc stílusa */
 .react-datepicker__month-text {
@@ -63,7 +63,8 @@
   font-size: 16px; /* Betűméret módosítása */
   box-sizing: border-box; /* Beleférjen a konténerbe, figyelembe véve a padding-ot */
   width: 100%;
-  height: 300px
+  height: 100%;
+
 }
 
 .react-datepicker__current-month {
@@ -76,9 +77,11 @@
 
 .react-datepicker__month-container{
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 500px;
 }
 
 .react-datepicker__month{
   height: 80%;
 }
+

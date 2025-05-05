@@ -3,6 +3,8 @@ import "../Hero.css"
 import { BsHeartPulseFill } from "react-icons/bs";
 import Button from './Button';
 
+
+
 function Hero(props) {
   console.log("Hero props:", props);
   
