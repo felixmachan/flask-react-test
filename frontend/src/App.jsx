@@ -6,7 +6,6 @@ import Footer from "./components/Footer.jsx";
 import Appointments from './components/Appointments.jsx'; // Időpontfoglalás oldal
 import { BsHeartPulseFill } from "react-icons/bs"; // Ikon importálás
 
-
 function App() {
   const [message, setMessage] = useState('Töltés...');
 
@@ -27,7 +26,10 @@ function App() {
               title="Kényeztetés a mindennapokban"
               body="A lelki és testi egészség megőrzéséért." 
               icon={<BsHeartPulseFill className="hero-icon" />}
-            /></>
+              showButton={true} // Gomb megjelenítése
+              buttonText="Időpontot foglalok" // Gomb szövege
+            />
+            </>
             } />
           <Route path="/appointments" element={<><Appointments /></>} /> {/* Időpontfoglalás */}
         </Routes>
