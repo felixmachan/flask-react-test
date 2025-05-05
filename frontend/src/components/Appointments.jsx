@@ -9,7 +9,6 @@ function Appointments() {
                 title="Időpontfoglalás"
                 body="Válaszd ki a számodra legmegfelelőbb időpontot és szolgáltatást!"
                 icon={<MdMoreTime className='hero-icon'/>}
-                buttonText="Időpontfoglalás"
             />
         
     );
