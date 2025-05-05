@@ -25,7 +25,7 @@ function App() {
           <Route path="/" element={
             <><Hero
               title="Kényeztetés a mindennapokban"
-              body="TalpPont - Talpmasszázs és egészségmegőrzés" 
+              body="A lelki és testi egészség megőrzéséért." 
               icon={<BsHeartPulseFill className="hero-icon" />}
             /></>
             } />
