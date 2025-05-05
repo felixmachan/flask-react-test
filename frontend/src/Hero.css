@@ -1,0 +1,14 @@
+.hero{
+    background-color: #608BC1;
+    width: 100vw;
+    margin-top: 100px;
+}
+
+.blue-bg{
+    background-color: #133E87 !important; /* Saját kék */
+    color: white !important; /* Fehér szöveg */
+}
+
+.lead{
+    font-weight: 400 !important; /* Normál vastagság */
+}

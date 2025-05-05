@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap');
+
+
+.custom-navbar{
+    border-bottom: 5px solid #133E87 !important; /* Saját kék */
+}
+
+
+.talppont{
+    color: #133E87 !important; /* Saját kék */
+    font-size: 3rem !important; /* Saját méret */
+    font-family: 'Imperial Script', cursive !important; /* Saját betűtípus */
+    font-weight: 400 !important; /* Saját vastagság */
+    font-style: normal !important; /* Saját dőlt */
+}
+
+.nav-links .nav-link {
+    font-size: 1.2rem; /* vagy pl. 20px */
+    font-weight: 500;  /* ha kicsit vastagabb betű kell */
+  }
+  /* Navbar.css */
+  
