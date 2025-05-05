@@ -1,0 +1,84 @@
+/* Naptár háttérszín és szövegformázás */
+.react-datepicker__day--selected {
+  background-color: #133E87; /* Kiválasztott nap háttérszíne */
+  color: white; /* Kiválasztott nap szövegszíne */
+  border-radius: 50%; /* Kör alakú kijelölés */
+}
+
+/* Fejléc háttérszíne és szövegszíne */
+.react-datepicker__header {
+  background-color: #133E87; /* Fejléc háttérszíne */
+  color: white; /* Fejléc szövegszíne */
+}
+
+
+.react-datepicker__day:hover,
+.react-datepicker__day--selected:hover,
+.react-datepicker__day--keyboard-selected:hover {
+  background-color: #608cc181 !important;
+  border-radius: 50% !important;
+  color: white;
+}
+
+/* Fejléc stílusa */
+.react-datepicker__month-text {
+  font-weight: bold; /* Fejléc szövege félkövér */
+  color: white; /* Fejléc szövegszíne */
+}
+
+/* Ma gomb stílus */
+.react-datepicker__today-button {
+  background-color: #28a745; /* Ma gomb színe */
+  color: white;
+}
+
+.react-datepicker__today-button:hover {
+  background-color: #218838; /* Hover szín */
+}
+
+/* Bal és jobb blokk igazítása */
+.datepicker-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 20px;
+  flex-wrap: wrap;
+  height: 100%;
+}
+
+/* Bal oldali naptár blokk */
+.datepicker-calendar {
+  min-width: 300px;
+  max-width: 50%; /* Ezt hozzáadva biztosítjuk, hogy a naptár kitöltse a szülőt */
+  max-height: 80%;
+}
+
+/* Jobb oldali időpont blokk */
+.datepicker-times {
+  max-width: 50%;
+}
+
+.react-datepicker { /* Ne legyen nagyobb, mint a szülőelem */
+  font-size: 16px; /* Betűméret módosítása */
+  box-sizing: border-box; /* Beleférjen a konténerbe, figyelembe véve a padding-ot */
+  width: 100%;
+  height: 300px
+}
+
+.react-datepicker__current-month {
+  color: white; /* Fejléc szövegszíne */
+}
+
+.react-datepicker__day-name{
+  color: white;
+}
+
+.react-datepicker__month-container{
+  width: 100%;
+  height: 100%;
+}
+
+.react-datepicker__month{
+  height: 80%;
+}
