@@ -1,16 +1,26 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Importálás
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom'; // Router, useNavigate
 import { useEffect, useState } from 'react';
 import BasicExample from './components/Navbar';
 import Hero from './components/Hero';
 import Footer from "./components/Footer.jsx";
-import Appointments from './components/Appointments.jsx'; // Időpontfoglalás oldal
-import { BsHeartPulseFill } from "react-icons/bs"; // Ikon importálás
+import Appointments from './components/Appointments.jsx';
+import { BsHeartPulseFill } from "react-icons/bs";
+
+// 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
+function NavigateButtonWrapper({ children }) {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate('/appointments');
+  };
+
+  return children(handleClick); // callbackként adja vissza a navigate-es függvényt
+}
 
 function App() {
   const [message, setMessage] = useState('Töltés...');
 
   useEffect(() => {
-    fetch('/api/hello')  // Ez Vite proxy esetén működik
+    fetch('/api/hello')
       .then(res => res.json())
       .then(data => setMessage(data.message))
       .catch(err => setMessage('Hiba történt az API híváskor.'));
@@ -22,18 +32,22 @@ function App() {
         <BasicExample />
         <Routes>
           <Route path="/" element={
-            <><Hero
-              title="Kényeztetés a mindennapokban"
-              body="A lelki és testi egészség megőrzéséért." 
-              icon={<BsHeartPulseFill className="hero-icon" />}
-              showButton={true} // Gomb megjelenítése
-              buttonText="Időpontot foglalok" // Gomb szövege
-            />
-            </>
-            } />
-          <Route path="/appointments" element={<><Appointments /></>} /> {/* Időpontfoglalás */}
+            <NavigateButtonWrapper>
+              {(handleButtonClick) => (
+                <Hero
+                  title="Kényeztetés a mindennapokban"
+                  body="A lelki és testi egészség megőrzéséért." 
+                  icon={<BsHeartPulseFill className="hero-icon" />}
+                  showButton={true}
+                  buttonText="Időpontot foglalok"
+                  buttonAction={handleButtonClick}
+                />
+              )}
+            </NavigateButtonWrapper>
+          } />
+          <Route path="/appointments" element={<Appointments />} />
         </Routes>
-        <Footer /> {/* Footer mindig ott lesz */}
+        <Footer />
       </Router>
     </div>
   );
