@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Footer from "./components/Footer.jsx";
 import Appointments from './components/Appointments.jsx';
 import { BsHeartPulseFill } from "react-icons/bs";
+import Contact from './components/Contact.jsx';
 
 // 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 function NavigateButtonWrapper({ children }) {
@@ -46,6 +47,7 @@ function App() {
             </NavigateButtonWrapper>
           } />
           <Route path="/appointments" element={<Appointments />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
         <Footer />
       </Router>
