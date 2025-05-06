@@ -1,7 +1,6 @@
 .hero{
     background-color: #608BC1;
     margin-top: 0px;
-    border-bottom: #133E87 5px solid;
 }
 
 .blue-bg{
@@ -20,3 +19,9 @@
 button:hover{
     box-shadow: 2px 2px 10px #000000;
 }
+
+img{
+    width: 100%;
+}
+
+
