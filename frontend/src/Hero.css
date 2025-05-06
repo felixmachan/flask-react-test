@@ -17,3 +17,6 @@
     font-size: 72px; /* vagy egy másik méret */
     color: #000; /* Ha szükséges, állítsd be a kívánt színt */
 }
+button:hover{
+    box-shadow: 2px 2px 10px #000000;
+}

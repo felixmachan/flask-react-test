@@ -1,7 +1,6 @@
 import React from 'react';
 import "../Hero.css"
-import { BsHeartPulseFill } from "react-icons/bs";
-import Button from './Button';
+
 
 function Hero(props) {
   const {
