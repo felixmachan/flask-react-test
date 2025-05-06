@@ -1,0 +1,25 @@
+.footer {
+    background-color: #133E87;
+    color: white; /* Fehér szöveg */
+}
+.footer p, .footer li {
+    color: white !important;
+  }
+  .footp{
+    color: white !important;
+  }
+
+.footwave{
+    width: 100%;
+    
+}
+.container-fluid {
+    margin-top: 0px;
+}
+footer{
+    margin-top: 0px;
+}
+
+.footer-wrapper{
+    margin-top: 50px;
+}

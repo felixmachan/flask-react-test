@@ -20,8 +20,9 @@ button:hover{
     box-shadow: 2px 2px 10px #000000;
 }
 
-img{
-    width: 100%;
+
+.hero-wrapper{
+    margin-bottom: 40px;
 }
 
 
