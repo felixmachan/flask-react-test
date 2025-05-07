@@ -37,7 +37,7 @@ function CollapsibleExample() {
         <Navbar.Collapse id="responsive-navbar-nav" in={isOpen}>  {/* Toggle alapú nyitás/zárás */}
           <Nav className="ms-auto nav-links">
             <Nav.Link as={Link} to="/">Kezdőlap</Nav.Link>
-            <Nav.Link href='#'>Szolgáltatások</Nav.Link>
+            <Nav.Link as={Link} to="/services">Szolgáltatások</Nav.Link>
             <Nav.Link href='#'>Árak</Nav.Link>
             <Nav.Link as={Link} to="/appointments">Időpontfoglalás</Nav.Link>
             <Nav.Link href='#'>Rólam</Nav.Link>
