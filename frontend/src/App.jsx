@@ -8,6 +8,7 @@ import { BsHeartPulseFill } from "react-icons/bs";
 import Contact from './components/Contact.jsx';
 import Home from './components/Home.jsx';
 import Services from './components/Services.jsx';
+import Login from './components/Login.jsx';
 
 // 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/contact" element={<Contact />} />
           <Route path='/services' element={<Services />} />
+          <Route path='/login' element={<Login />} />
         </Routes>
         <Footer />
       </Router>

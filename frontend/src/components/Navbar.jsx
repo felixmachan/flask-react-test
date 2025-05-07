@@ -42,6 +42,7 @@ function CollapsibleExample() {
             <Nav.Link as={Link} to="/appointments">Időpontfoglalás</Nav.Link>
             <Nav.Link href='#'>Rólam</Nav.Link>
             <Nav.Link as={Link} to="/contact">Kapcsolat</Nav.Link>
+            <Nav.Link as={Link} to="/login">Bejelentkezés</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

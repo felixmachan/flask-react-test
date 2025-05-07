@@ -1,0 +1,23 @@
+.form-wrapper {
+    height: 80vh; /* Teljes képernyőmagasság */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .formmain {
+    width: 100%;
+    max-width: 400px; /* Kényelmes szélesség */
+    padding: 1rem;
+  }
+
+  .login{
+    background-color: #133E87 !important;
+  }
+
+  .regist{
+    background-color: white !important;
+    border: 2px solid #133E87 !important;
+    color: #133E87 !important;
+  }
