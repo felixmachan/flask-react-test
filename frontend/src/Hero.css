@@ -23,6 +23,20 @@ button:hover{
 
 .hero-wrapper{
     margin-bottom: 40px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
+.wave-svg{
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+    overflow: hidden;
+}
 
+@media (max-width: 768px) {
+    .wave-svg {
+      width: auto; /* Kép szélessége automatikusan igazodik telefonos nézethez */
+    }
+  }

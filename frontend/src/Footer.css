@@ -23,3 +23,9 @@ footer{
 .footer-wrapper{
     margin-top: 50px;
 }
+
+@media (max-width: 768px) {
+    .footwave {
+      width: auto; /* Kép szélessége automatikusan igazodik telefonos nézethez */
+    }
+  }
