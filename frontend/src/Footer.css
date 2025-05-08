@@ -10,7 +10,11 @@
   }
 
 .footwave{
-    width: 100%;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  object-fit: cover;
+  overflow: -moz-hidden-unscrollable;
     
 }
 .container-fluid {
@@ -18,14 +22,16 @@
 }
 footer{
     margin-top: 0px;
+    width: 100%;
 }
 
 .footer-wrapper{
     margin-top: 50px;
+    width: 100%;
 }
 
 @media (max-width: 768px) {
     .footwave {
-      width: auto; /* Kép szélessége automatikusan igazodik telefonos nézethez */
+      width: 100%; /* Kép szélessége automatikusan igazodik telefonos nézethez */
     }
   }

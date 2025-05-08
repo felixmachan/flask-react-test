@@ -48,7 +48,7 @@ function Hero(props) {
       </div>
 
       {/* Hullámos alja (SVG) */}
-      <img className="wave-svg" src="/stacked-waves-haikei.svg" />
+      <img className="wave-svg w-100" src="/stacked-waves-haikei.svg" />
     </div>
   );
 }

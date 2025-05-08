@@ -32,7 +32,7 @@ button:hover{
     display: block;
     margin: 0 auto;
     object-fit: cover;
-    overflow: hidden;
+    overflow: -moz-hidden-unscrollable;
 }
 
 @media (max-width: 768px) {
