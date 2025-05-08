@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import "../Hero.css";
 
 function Hero(props) {
@@ -9,7 +9,7 @@ function Hero(props) {
     showButton = false,
     buttonText = "Időpontot foglalok",
     buttonAction = () => {},
-    href
+    href,
   } = props;
 
   return (
@@ -48,7 +48,7 @@ function Hero(props) {
       </div>
 
       {/* Hullámos alja (SVG) */}
-      <img className="wave-svg" src='../../public/stacked-waves-haikei.svg'/>
+      <img className="wave-svg" src="/stacked-waves-haikei.svg" />
     </div>
   );
 }
