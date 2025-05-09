@@ -23,7 +23,7 @@ function CollapsibleExample() {
       expand="lg"
     >
       <Container>
-        <Navbar.Brand href="#home" className="d-flex align-items-center">
+        <Navbar.Brand href="/" className="d-flex align-items-center">
           <img
             alt=""
             src="/logo.png"
