@@ -4,7 +4,7 @@ import "../Login.css";
 function Login() {
   return (
     <div className="form-wrapper d-flex justify-content-center align-items-center">
-      <main className="form-signin formmain mt-4 mb-3">
+      <main className="form-signin formmain mb-3">
         <form>
           <img
             className="mb-4 mx-auto d-block"
