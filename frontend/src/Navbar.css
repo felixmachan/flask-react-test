@@ -1,31 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap');
 
-
-.custom-navbar{
-    border-bottom: 5px solid #133E87 !important; /* Saját kék */
+.custom-navbar {
+  border-bottom: 5px solid #133E87 !important;
 }
 
-
-.talppont{
-    color: #133E87 !important; /* Saját kék */
-    font-size: 3rem !important; /* Saját méret */
-    font-family: 'Imperial Script', cursive !important; /* Saját betűtípus */
-    font-weight: 400 !important; /* Saját vastagság */
-    font-style: normal !important; /* Saját dőlt */
+.talppont {
+  color: #133E87 !important;
+  font-size: 3rem !important;
+  font-family: 'Imperial Script', cursive !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
 }
 
-/* Csak azokra a nav-linkekre vonatkozzon, amik nem dropdown-ok */
-.nav-links > .nav-link {
-  font-size: 1.2rem;
-  font-weight: 400;
+/* Egységes stílus minden nav szövegre (dropdown is!) */
+.nav-text {
   position: relative;
   display: inline-block;
-  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 400;
   color: black;
-  width: fit-content;
 }
 
-.nav-links > .nav-link::after {
+.nav-text::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -39,58 +35,28 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .nav-links > .nav-link:hover::after {
+  .nav-text:hover::after {
     transform: scaleX(1);
-    transform-origin: left;
   }
 
-  .nav-links > .nav-link:not(:hover)::after {
+  .nav-text:not(:hover)::after {
     transform-origin: right;
     transform: scaleX(0);
   }
 }
 
-.dropdown{
-    font-size: 1.2rem !important; /* Saját méret */
-    font-weight: 400 !important; /* Saját vastagság */
-    color: black !important; /* Saját kék */
-}
-
-.dropdown > .nav-link,
-.dropdown .dropdown-toggle {
-  color: black !important;
+/* Dropdown alap stílus */
+.dropdown {
   font-size: 1.2rem !important;
   font-weight: 400 !important;
+  color: black !important;
 }
 
-.nav-dropdown-text {
-  position: relative;
-  display: inline-block;
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: black;
+.asd{
+  width: 100% !important;
 }
 
-.nav-dropdown-text::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  background-color: #133E87;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%280, 0, 0, 0.9%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .nav-dropdown-text:hover::after {
-    transform: scaleX(1);
-  }
-
-  .nav-dropdown-text:not(:hover)::after {
-    transform: scaleX(0);
-    transform-origin: right;
-  }
-}

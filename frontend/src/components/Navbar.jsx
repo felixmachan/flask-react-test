@@ -7,15 +7,13 @@ import "../Navbar.css";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
 function CollapsibleExample() {
-  const [isOpen, setIsOpen] = useState(false); // Nyitott/zárt menü állapota
-  const location = useLocation(); // Aktuális útvonal lekérése
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-  // Amikor az oldal változik, zárjuk be a menüt
   useEffect(() => {
-    setIsOpen(false); // Bezárja a menüt új navigáláskor
+    setIsOpen(false);
   }, [location]);
 
-  // Menü toggle (nyit/zár)
   const handleToggle = () => setIsOpen(!isOpen);
 
   return (
@@ -25,29 +23,27 @@ function CollapsibleExample() {
       expand="lg"
     >
       <Container>
-        <Navbar.Brand href="/" className="d-flex align-items-center">
+        <Navbar.Brand href="#home" className="d-flex align-items-center">
           <img
             alt=""
             src="/logo.png"
             width="100"
             height="100"
             className="d-inline-block align-top"
-          />{" "}
+          />
           <span className="brand-text ms-3 talppont">TalpPont</span>
         </Navbar.Brand>
         <Navbar.Toggle
           aria-controls="responsive-navbar-nav"
-          onClick={handleToggle} // Toggle akció a menü nyitásához/zárásához
+          onClick={handleToggle}
         />
         <Navbar.Collapse id="responsive-navbar-nav" in={isOpen}>
-          {" "}
-          {/* Toggle alapú nyitás/zárás */}
           <Nav className="ms-auto nav-links">
             <Nav.Link as={Link} to="/">
-              Kezdőlap
+              <span className="nav-text">Kezdőlap</span>
             </Nav.Link>
             <NavDropdown
-              title={<span className="nav-dropdown-text">Szolgáltatások</span>}
+              title={<span className="nav-text">Szolgáltatások</span>}
               className="dropdown"
               id="collapsible-nav-dropdown"
             >
@@ -57,13 +53,13 @@ function CollapsibleExample() {
               <NavDropdown.Item href="#action/3.2">Árak</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link as={Link} to="/appointments">
-              Időpontfoglalás
+              <span className="nav-text">Időpontfoglalás</span>
             </Nav.Link>
             <Nav.Link as={Link} to="/contact">
-              Kapcsolat
+              <span className="nav-text">Kapcsolat</span>
             </Nav.Link>
             <Nav.Link as={Link} to="/login">
-              Bejelentkezés
+              <span className="nav-text login-button">Bejelentkezés</span>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
