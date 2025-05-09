@@ -4,6 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, useLocation } from "react-router-dom";
 import "../Navbar.css";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 function CollapsibleExample() {
   const [isOpen, setIsOpen] = useState(false); // Nyitott/zárt menü állapota
@@ -24,7 +25,7 @@ function CollapsibleExample() {
       expand="lg"
     >
       <Container>
-        <Navbar.Brand href="#home" className="d-flex align-items-center">
+        <Navbar.Brand href="/" className="d-flex align-items-center">
           <img
             alt=""
             src="/logo.png"
@@ -45,14 +46,19 @@ function CollapsibleExample() {
             <Nav.Link as={Link} to="/">
               Kezdőlap
             </Nav.Link>
-            <Nav.Link as={Link} to="/services">
-              Szolgáltatások
-            </Nav.Link>
-            <Nav.Link href="#">Árak</Nav.Link>
+            <NavDropdown
+              title={<span className="nav-dropdown-text">Szolgáltatások</span>}
+              className="dropdown"
+              id="collapsible-nav-dropdown"
+            >
+              <NavDropdown.Item as={Link} to="/services">
+                Kezelések
+              </NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.2">Árak</NavDropdown.Item>
+            </NavDropdown>
             <Nav.Link as={Link} to="/appointments">
               Időpontfoglalás
             </Nav.Link>
-            <Nav.Link href="#">Rólam</Nav.Link>
             <Nav.Link as={Link} to="/contact">
               Kapcsolat
             </Nav.Link>

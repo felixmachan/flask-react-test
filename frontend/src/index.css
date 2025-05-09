@@ -78,3 +78,7 @@ button:focus-visible {
   margin-right: 0;
   margin-left: 0;
 }
+
+.btn{
+  border-radius: 30px !important; /* Saját kerekítés */
+}
