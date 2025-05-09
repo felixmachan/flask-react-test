@@ -4,7 +4,7 @@ import "../Footer.css";
 function Footer() {
   return (
     <div className="footer-wrapper">
-      <img class="footwave" src="/footer.svg"></img> {/* 1000x70 */}
+      <img class="footwave" src="/footer2.svg"></img> {/* 1000x70 */}
       <div class="container-fluid footer">
         <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-0">
           <p class="col-md-4 mb-0 text-body-secondary footp">© 2025 TalpPont</p>
