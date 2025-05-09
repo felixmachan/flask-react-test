@@ -17,7 +17,7 @@ function Login() {
           <form>
             <img
               className="mb-4 mx-auto d-block"
-              src="../../public/logo.png"
+              src="/logo.png"
               alt=""
               width="100"
               height="100"
