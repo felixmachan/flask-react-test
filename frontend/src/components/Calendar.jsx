@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import '../DatePickerComponent.css'; // Ha külön stílust akarsz
+import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "../DatePickerComponent.css"; // Ha külön stílust akarsz
 import { hu } from "date-fns/locale"; // Magyar lokalizáció
 
 function DatePickerComponent() {
@@ -9,7 +9,7 @@ function DatePickerComponent() {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    console.log('Kiválasztott dátum:', date);
+    console.log("Kiválasztott dátum:", date);
   };
 
   return (
