@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoIosLogIn } from "react-icons/io";
 import Hero from "./Hero";
 import "../Register.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../DatePickerComponent.css"; // Ha külön stílust akarsz
-import { hu } from "date-fns/locale"; // Magyar lokalizáció
-import { useState } from "react";
+import "../DatePickerComponent.css";
+import { hu } from "date-fns/locale";
 import makeAnimated from "react-select/animated";
-import Creatable, { useCreatable } from "react-select/creatable";
+import Creatable from "react-select/creatable";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -23,23 +22,32 @@ const options = [
   { value: "mango", label: "Mango" },
 ];
 
-const MyComponent = () => <Select options={options} />;
-
 function Register() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
   const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [complaints, setComplaints] = useState([]);
   const [showGreeting, setShowGreeting] = useState(false);
 
-  const [password, setPassword] = useState("");
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-
   const [isLengthValid, setIsLengthValid] = useState(false);
   const [hasNumber, setHasNumber] = useState(false);
   const [hasUppercase, setHasUppercase] = useState(false);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Keresztnév:", firstName);
+    console.log("Vezetéknév:", lastName);
+    console.log("Email:", email);
+    console.log("Jelszó:", password);
+    console.log("Születési dátum:", selectedDate.toLocaleDateString());
+    console.log("Panaszok:", complaints.map((c) => c.label).join(", "));
   };
 
   return (
@@ -61,9 +69,9 @@ function Register() {
             )}
           </h1>
         </div>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="row">
-            <label for="validationDefault01">Keresztnév</label>
+            <label htmlFor="validationDefault01">Keresztnév</label>
             <input
               type="text"
               className="form-control reg"
@@ -79,30 +87,35 @@ function Register() {
               }}
             />
           </div>
+
           <div className="row">
-            <label for="validationDefault02">Vezetéknév</label>
+            <label htmlFor="validationDefault02">Vezetéknév</label>
             <input
               type="text"
               className="form-control reg"
               id="validationDefault02"
               placeholder="Vezetéknév"
               required
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
+
           <div className="row">
-            <label for="validationDefaultUsername">E-mail cím</label>
+            <label htmlFor="validationDefaultUsername">E-mail cím</label>
             <input
               type="email"
               className="form-control reg"
               id="validationDefaultUsername"
               placeholder="E-mail cím"
-              aria-describedby="inputGroupPrepend2"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div className="row">
-            <label for="validationDefault03">Jelszó</label>
+            <label htmlFor="validationDefault03">Jelszó</label>
             <input
               type="password"
               className="form-control reg"
@@ -121,6 +134,7 @@ function Register() {
               }}
             />
           </div>
+
           {isPasswordFocused && (
             <div className="password-hints">
               <p className={isLengthValid ? "valid" : "invalid"}>
@@ -136,36 +150,36 @@ function Register() {
           )}
 
           <div className="row">
-            <label for="validationDefault05">Születési dátum</label>
+            <label htmlFor="validationDefault05">Születési dátum</label>
             <DatePicker
               selected={selectedDate}
               onChange={handleDateChange}
-              locale={hu} // Magyar lokalizáció
+              locale={hu}
               className="form-control reg"
             />
           </div>
-          <div className="row">
-            <label for="validationDefault05">Panaszok (nem kötelező)</label>
-            <makeAnimated>
-              <Creatable
-                closeMenuOnSelect={false}
-                components={makeAnimated()}
-                isMulti
-                options={options}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder="Válassz"
-                captureMenuScroll
-              />
-            </makeAnimated>
+
+          <div className="row mt-3">
+            <label htmlFor="complaints">Panaszok (nem kötelező)</label>
+            <Creatable
+              isMulti
+              options={options}
+              components={makeAnimated()}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Válassz"
+              value={complaints}
+              onChange={(selected) => setComplaints(selected)}
+            />
             <label
-              for="validationDefault05"
+              htmlFor="complaints"
               style={{ marginTop: "10px", marginBottom: "20px" }}
             >
               Hozzáadhatod a meglévő panaszaidat a fiókodhoz, ezzel megkönnyíted
               számomra a felkészülést a kezelésre.
             </label>
           </div>
+
           <div className="form-group">
             <div className="form-check">
               <input
@@ -175,12 +189,13 @@ function Register() {
                 id="invalidCheck2"
                 required
               />
-              <label className="form-check-label" for="invalidCheck2">
+              <label className="form-check-label" htmlFor="invalidCheck2">
                 Hozzájárulok az adataim kezeléséhez és a felhasználási
                 feltételekhez.
               </label>
             </div>
           </div>
+
           <button
             className="btn btn-primary btn-lg mt-4 px-4 gap-3 blue-bg button"
             type="submit"
@@ -188,7 +203,6 @@ function Register() {
             Regisztráció
           </button>
         </form>
-        <div></div>
       </div>
     </div>
   );
