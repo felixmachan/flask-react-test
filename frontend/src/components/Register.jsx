@@ -159,7 +159,7 @@ function Register() {
             />
           </div>
 
-          <div className="row mt-3">
+          <div className="row">
             <label htmlFor="complaints">Panaszok (nem kötelező)</label>
             <Creatable
               isMulti
