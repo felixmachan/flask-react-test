@@ -13,8 +13,39 @@
     padding: 0px !important;
 }
 
+.select__control{
+    border: 2px solid #133E87 !important;
+    border-radius: 10px !important;
+}
+makeanimated{
+    padding: 0px !important;
+}
+
+.select{
+    background-color: rgb(96, 139, 193);
+}
+
+.select__multi-value{
+    background-color: rgb(96, 139, 193) !important;
+    color: white !important;
+    border-radius: 5px !important;
+}
+.select__multi-value__label{
+    color: white !important;
+}
+
+.name-highlight{
+    color: #133E87 !important;
+    font-weight: bold !important;
+    font-style: italic !important;
+}
+
+
+
+
+
 @media (max-width: 768px) {
   .reg-wrapper {
-    width: 80%;
+    width: 80% !important;
   }
 }

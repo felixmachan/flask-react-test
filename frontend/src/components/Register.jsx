@@ -7,9 +7,29 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../DatePickerComponent.css"; // Ha külön stílust akarsz
 import { hu } from "date-fns/locale"; // Magyar lokalizáció
 import { useState } from "react";
+import makeAnimated from "react-select/animated";
+import Creatable, { useCreatable } from "react-select/creatable";
+
+const options = [
+  { value: "chocolate", label: "Chocolate" },
+  { value: "strawberry", label: "Strawberry" },
+  { value: "vanilla", label: "Vanilla" },
+  { value: "apple", label: "Apple" },
+  { value: "orange", label: "Orange" },
+  { value: "banana", label: "Banana" },
+  { value: "grape", label: "Grape" },
+  { value: "watermelon", label: "Watermelon" },
+  { value: "kiwi", label: "Kiwi" },
+  { value: "mango", label: "Mango" },
+];
+
+const MyComponent = () => <Select options={options} />;
 
 function Register() {
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const [firstName, setFirstName] = useState("");
+  const [showGreeting, setShowGreeting] = useState(false);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -24,7 +44,15 @@ function Register() {
       />
       <div className="reg-wrapper container-fluid">
         <div>
-          <h1 className="text-center mt-2">Regisztráció</h1>
+          <h1 className="text-center mt-2">
+            {showGreeting ? (
+              <>
+                Szia, <span className="name-highlight">{firstName}</span>!
+              </>
+            ) : (
+              "Regisztráció"
+            )}
+          </h1>
         </div>
         <form>
           <div className="row">
@@ -34,8 +62,14 @@ function Register() {
               className="form-control reg"
               id="validationDefault01"
               placeholder="Keresztnév"
-              value=""
               required
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              onBlur={() => {
+                if (firstName.trim() !== "") {
+                  setShowGreeting(true);
+                }
+              }}
             />
           </div>
           <div className="row">
@@ -45,7 +79,6 @@ function Register() {
               className="form-control reg"
               id="validationDefault02"
               placeholder="Vezetéknév"
-              value=""
               required
             />
           </div>
@@ -79,6 +112,28 @@ function Register() {
               locale={hu} // Magyar lokalizáció
               className="form-control reg"
             />
+          </div>
+          <div className="row">
+            <label for="validationDefault05">Panaszok (nem kötelező)</label>
+            <makeAnimated>
+              <Creatable
+                closeMenuOnSelect={false}
+                components={makeAnimated()}
+                isMulti
+                options={options}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                placeholder="Válassz"
+                captureMenuScroll
+              />
+            </makeAnimated>
+            <label
+              for="validationDefault05"
+              style={{ marginTop: "10px", marginBottom: "20px" }}
+            >
+              Hozzáadhatod a meglévő panaszaidat a fiókodhoz, ezzel megkönnyíted
+              számomra a felkészülést a kezelésre.
+            </label>
           </div>
           <div className="form-group">
             <div className="form-check">
