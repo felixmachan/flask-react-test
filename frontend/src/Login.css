@@ -33,3 +33,10 @@
     border-radius: 10px !important;;
     border:#133E87 2px solid !important;
   }
+
+  @media (max-width: 768px) {
+    .form-wrapper {
+      width: 80%;
+    }
+    
+  }

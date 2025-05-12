@@ -1,5 +1,6 @@
 .reg-wrapper{
-    width: 40% !important;
+    width: 50% !important;
+    max-width: 500px;
     background-color: white !important;
     border: 2px solid #133E87 !important;
     border-radius: 20px;
@@ -10,4 +11,10 @@
 }
 .react-datepicker-wrapper{
     padding: 0px !important;
+}
+
+@media (max-width: 768px) {
+  .reg-wrapper {
+    width: 80%;
+  }
 }
