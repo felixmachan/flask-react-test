@@ -40,6 +40,30 @@ makeanimated{
     font-style: italic !important;
 }
 
+.password-hints {
+  margin-top: 10px;
+  margin-left: 10px;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #133E87;
+  font-size: 0.9rem;
+  width: fit-content;
+  min-width: 50%;
+  height: fit-content !important;
+
+}
+
+.password-hints .valid {
+  color: green;
+  font-weight: 500;
+}
+
+.password-hints .invalid {
+  color: red;
+}
+
+
 
 
 

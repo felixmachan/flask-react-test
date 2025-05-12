@@ -31,6 +31,13 @@ function Register() {
   const [firstName, setFirstName] = useState("");
   const [showGreeting, setShowGreeting] = useState(false);
 
+  const [password, setPassword] = useState("");
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
+  const [isLengthValid, setIsLengthValid] = useState(false);
+  const [hasNumber, setHasNumber] = useState(false);
+  const [hasUppercase, setHasUppercase] = useState(false);
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -102,8 +109,32 @@ function Register() {
               id="validationDefault03"
               placeholder="Jelszó"
               required
+              value={password}
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+                setIsLengthValid(value.length >= 8);
+                setHasNumber(/\d/.test(value));
+                setHasUppercase(/[A-Z]/.test(value));
+              }}
             />
           </div>
+          {isPasswordFocused && (
+            <div className="password-hints">
+              <p className={isLengthValid ? "valid" : "invalid"}>
+                • Minimum 8 karakter
+              </p>
+              <p className={hasNumber ? "valid" : "invalid"}>
+                • Minimum 1 szám karakter
+              </p>
+              <p className={hasUppercase ? "valid" : "invalid"}>
+                • Minimum 1 nagybetű
+              </p>
+            </div>
+          )}
+
           <div className="row">
             <label for="validationDefault05">Születési dátum</label>
             <DatePicker
@@ -145,7 +176,8 @@ function Register() {
                 required
               />
               <label className="form-check-label" for="invalidCheck2">
-                Agree to terms and conditions
+                Hozzájárulok az adataim kezeléséhez és a felhasználási
+                feltételekhez.
               </label>
             </div>
           </div>
