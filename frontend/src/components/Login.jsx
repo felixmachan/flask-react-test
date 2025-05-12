@@ -12,7 +12,7 @@ function Login() {
         body="Lépj be a fiókodba!"
         icon={<IoIosLogIn className="hero-icon" />}
       />
-      <div>
+      <div className="form-wrapper-outer">
         <div className="form-wrapper d-flex justify-content-center align-items-center">
           <main className="form-signin formmain mb-3">
             <form>

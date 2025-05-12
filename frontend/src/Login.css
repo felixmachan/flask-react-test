@@ -1,3 +1,11 @@
+.form-wrapper-outer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
 .form-wrapper {
     height: 80vh; /* Teljes képernyőmagasság */
     width: 100%;
