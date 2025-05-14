@@ -3,6 +3,8 @@ import "../Login.css";
 import { Link } from "react-router-dom";
 import { IoIosLogIn } from "react-icons/io";
 import Hero from "./Hero";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleLoginButton from "./LoginWithGoogle";
 
 function Login() {
   return (
@@ -69,6 +71,14 @@ function Login() {
                   Regisztráció
                 </button>
               </Link>
+              <GoogleOAuthProvider
+                clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+              >
+                <GoogleLoginButton
+                  className="btn btn-primary w-100 py-2 login"
+                  text="Lépj be Google fiókkal"
+                />
+              </GoogleOAuthProvider>
             </form>
             <div className="text-center mt-3">
               <a href="#">Elfelejtetted a jelszavad?</a>

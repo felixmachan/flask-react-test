@@ -9,6 +9,7 @@ import makeAnimated from "react-select/animated";
 import Creatable from "react-select/creatable";
 import PrevTreatment from "./PrevTreatment";
 import "../Profile.css";
+import { FaUserEdit } from "react-icons/fa";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -52,7 +53,7 @@ function Profile() {
       <Hero
         title="Profil"
         body="Itt tudod megtekinteni és szerkeszteni a profilodat."
-        icon={<IoPersonAdd className="hero-icon" />}
+        icon={<FaUserEdit className="hero-icon" />}
       />
       <div className="profile-wrapper container-fluid align-items-center">
         <div className="reg-wrapper container-fluid">

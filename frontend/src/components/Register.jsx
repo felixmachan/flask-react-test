@@ -6,6 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../DatePickerComponent.css";
 import makeAnimated from "react-select/animated";
 import Creatable from "react-select/creatable";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleLoginButton from "./LoginWithGoogle";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -194,11 +196,17 @@ function Register() {
           </div>
 
           <button
-            className="btn btn-primary btn-lg mt-4 px-4 gap-3 blue-bg button"
+            className="btn btn-primary  w-100 mt-3 mb-3 px-4 gap-3 blue-bg button"
             type="submit"
           >
             Regisztráció
           </button>
+          <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+            <GoogleLoginButton
+              className="btn btn-primary w-100 py-2 login"
+              text="Regisztrálj Google fiókkal"
+            />
+          </GoogleOAuthProvider>
         </form>
       </div>
     </div>
