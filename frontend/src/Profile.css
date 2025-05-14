@@ -1,0 +1,7 @@
+.profile-wrapper{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-self: flex-start;
+}

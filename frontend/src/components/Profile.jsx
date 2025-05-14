@@ -1,13 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import Hero from "./Hero";
-import "../Profile.css";
 import { IoPersonAdd } from "react-icons/io5";
 import "../Register.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "../DatePickerComponent.css";
 import makeAnimated from "react-select/animated";
 import Creatable from "react-select/creatable";
+import PrevTreatment from "./PrevTreatment";
+import "../Profile.css";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -53,7 +54,7 @@ function Profile() {
         body="Itt tudod megtekinteni és szerkeszteni a profilodat."
         icon={<IoPersonAdd className="hero-icon" />}
       />
-      <div className="profile-wrapper container-fluid justify-content-center align-items-center">
+      <div className="profile-wrapper container-fluid align-items-center">
         <div className="reg-wrapper container-fluid">
           <div>
             <h1 className="text-center mt-2">Profilom</h1>
@@ -177,10 +178,27 @@ function Profile() {
             </button>
           </form>
         </div>
-      </div>
-      <div className="reg-wrapper container-fluid mt-5">
-        <div>
-          <h1 className="text-center mt-2">Korábbi kezeléseim</h1>
+
+        <div className="reg-wrapper container-fluid">
+          <div>
+            <h1 className="text-center mt-2 mb-5">Korábbi kezeléseim</h1>
+          </div>
+          <PrevTreatment
+            date="2023.01.01"
+            description="Hátmasszázs, BEMER terápia 16 perc asdadasd"
+          />
+          <PrevTreatment
+            date="2023.01.01"
+            description="Hátmasszázs, BEMER terápia 16 perc asdadasd"
+          />
+          <PrevTreatment
+            date="2023.01.01"
+            description="Hátmasszázs, BEMER terápia 16 perc asdadasd"
+          />
+          <PrevTreatment
+            date="2023.01.01"
+            description="Hátmasszázs, BEMER terápia 16 perc asdadasd"
+          />
         </div>
       </div>
     </div>
