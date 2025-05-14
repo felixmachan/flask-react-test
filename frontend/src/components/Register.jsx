@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { IoIosLogIn } from "react-icons/io";
 import Hero from "./Hero";
 import "../Register.css";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../DatePickerComponent.css";
-import { hu } from "date-fns/locale";
 import makeAnimated from "react-select/animated";
 import Creatable from "react-select/creatable";
 
