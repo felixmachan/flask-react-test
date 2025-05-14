@@ -151,11 +151,10 @@ function Register() {
 
           <div className="row">
             <label htmlFor="validationDefault05">Születési dátum</label>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              locale={hu}
+            <input
+              type="date"
               className="form-control reg"
+              id="validationDefault05"
             />
           </div>
 

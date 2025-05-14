@@ -78,3 +78,10 @@ makeanimated{
     width: 80% !important;
   }
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    color: #133E87 !important;
+    background-color: #133E87 !important;
+    border-radius: 50% !important;
+    padding: 4px !important;
+}
