@@ -18,15 +18,6 @@ import Profile from "./components/Profile.jsx";
 // 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 
 function App() {
-  const [message, setMessage] = useState("Töltés...");
-
-  useEffect(() => {
-    fetch("/api/hello")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message))
-      .catch((err) => setMessage("Hiba történt az API híváskor."));
-  }, []);
-
   return (
     <div className="root">
       <Router>
