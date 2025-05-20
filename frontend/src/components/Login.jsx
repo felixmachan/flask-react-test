@@ -32,6 +32,7 @@ function Login() {
       }
 
       const data = await res.json();
+      console.log(data.message);
       console.log("Sikeres bejelentkezés:", data);
       // Itt pl. elmentheted a token-t, átirányíthatsz más oldalra, stb.
     } catch (err) {
