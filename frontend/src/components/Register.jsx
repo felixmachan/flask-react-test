@@ -23,6 +23,41 @@ const options = [
 ];
 
 function Register() {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Példa adat küldése a backendnek
+    const dataToSend = {
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      password: password,
+      date_of_birth: selectedDate.toISOString().split("T")[0], // yyyy-mm-dd formátum
+      complaints: complaints.map((c) => c.value), // csak a value-k kellenek
+    };
+    console.log("Küldött adatok:", dataToSend);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        console.log("Sikeres regisztráció:", json);
+        // Itt kezelheted a sikeres regisztrációt (pl. átirányítás vagy üzenet)
+      } else {
+        console.error("Hiba a regisztráció során");
+      }
+    } catch (error) {
+      console.error("Hálózati hiba:", error);
+    }
+  };
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,16 +73,6 @@ function Register() {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Keresztnév:", firstName);
-    console.log("Vezetéknév:", lastName);
-    console.log("Email:", email);
-    console.log("Jelszó:", password);
-    console.log("Születési dátum:", selectedDate.toLocaleDateString());
-    console.log("Panaszok:", complaints.map((c) => c.label).join(", "));
   };
 
   return (
@@ -155,6 +180,9 @@ function Register() {
               type="date"
               className="form-control reg"
               id="validationDefault05"
+              value={selectedDate.toISOString().split("T")[0]} // yyyy-mm-dd
+              onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              required
             />
           </div>
 

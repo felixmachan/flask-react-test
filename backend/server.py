@@ -1,42 +1,37 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import Column, Integer, String, Date
+from flask_sqlalchemy import SQLAlchemy
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv() 
+POSTGRES_PW = os.getenv("PSQL_PW")
 
 app = Flask(__name__)
-CORS(app)  # Engedélyezzük a CORS-t, hogy a frontend elérhesse az API-t
+CORS(app)  
 
 
-DATABASE_URL = "postgresql+psycopg2://postgres:1948@localhost:5432/talppont"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://postgres:{POSTGRES_PW}@localhost:5432/talppont"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-engine = create_engine(DATABASE_URL, echo=False)  # echo=True: SQL lekérdezéseket is kiírja konzolra
+# SQLAlchemy példány inicializálása
+db = SQLAlchemy(app)
 
-Base = declarative_base()
+# Modell definíció
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    gender = db.Column(db.String(10))
+    date_of_birth = db.Column(db.Date)
+    hashed_password = db.Column(db.String(300))
 
-# 2. Definiálj egy modellt
-class TestTable(Base):
-    __tablename__ = 'test_table'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    description = Column(String(200))
-
-# 3. Táblák létrehozása az adatbázisban (ha még nem léteznek)
-Base.metadata.create_all(engine)
-
-# 4. Session létrehozása (kapcsolat az adatbázishoz)
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# 5. Új rekord hozzáadása
-# new_row = TestTable(name="Teszt", description="Ez egy próba sor.")
-# session.add(new_row)
-# session.commit()
-
-# 6. Lekérdezés
-all_rows = session.query(TestTable).all()
-for row in all_rows:
-    print(f"ID: {row.id}, Name: {row.name}, Description: {row.description}")
-
+# Táblák létrehozása (egyszeri futás után eltávolíthatod vagy átrakhatod máshova)
+with app.app_context():
+    db.create_all()
 
 
 
@@ -51,11 +46,33 @@ fake_user_db = {
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
-    print(data)  # Debugging: kiírja a bejövő adatokat
+    print(data)  
     email = data.get('email')
     password = data.get('password')
 
     return jsonify({"pass": password, "email": email})
+
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    email = data.get('email')
+    password = data.get('password')
+    date_of_birth = data.get('date_of_birth')
+    complaints = data.get('complaints')
+
+    with app.app_context():
+        user_emails = db.session.execute(db.select(User)["email"]).scalars().all()
+        if email in user_emails:
+            return jsonify({"error": "Email already exists"}), 400
+        new_user = User(
+            email=email,
+            name=f"{first_name} {last_name}",
+            password=password)
+
+    return jsonify({"first_name": first_name, "last_name": last_name, "email": email, "password": password})
 
 if __name__ == '__main__':
     app.run(host="localhost", port=5000, debug=True)
