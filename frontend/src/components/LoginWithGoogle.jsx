@@ -3,12 +3,34 @@ import { useGoogleLogin } from "@react-oauth/google";
 
 const GoogleLoginButton = (props) => {
   const login = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
+    onSuccess: async (tokenResponse) => {
       console.log("Google token response:", tokenResponse);
-      // ide jönne a backend hívás tokenResponse.access_token-nel
+
+      try {
+        const res = await fetch("http://localhost:5000/api/register/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            access_token: tokenResponse.access_token,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Sikeres Google regisztráció:", data);
+          // Itt átirányíthatod a felhasználót vagy kiírhatsz egy üzenetet
+        } else {
+          const error = await res.json();
+          console.error("Sikertelen Google regisztráció:", error);
+        }
+      } catch (err) {
+        console.error("Hálózati hiba:", err);
+      }
     },
     onError: () => {
-      console.error("Login Failed");
+      console.error("Google Login Failed");
     },
   });
 

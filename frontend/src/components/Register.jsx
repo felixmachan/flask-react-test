@@ -52,7 +52,8 @@ function Register() {
         console.log("Sikeres regisztráció:", json);
         // Itt kezelheted a sikeres regisztrációt (pl. átirányítás vagy üzenet)
       } else {
-        console.error("Hiba a regisztráció során");
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || "Hiba a regisztráció során");
       }
     } catch (error) {
       console.error("Hálózati hiba:", error);
@@ -72,6 +73,7 @@ function Register() {
   const [isLengthValid, setIsLengthValid] = useState(false);
   const [hasNumber, setHasNumber] = useState(false);
   const [hasUppercase, setHasUppercase] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -246,6 +248,11 @@ function Register() {
           >
             Regisztráció
           </button>
+          {errorMessage && (
+            <div className="alert alert-danger" role="alert">
+              {errorMessage}
+            </div>
+          )}
           <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
             <GoogleLoginButton
               className="btn btn-primary w-100 py-2 login"

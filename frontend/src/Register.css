@@ -73,6 +73,10 @@ makeanimated {
   }
 }
 
+.alert {
+  border-radius: 10px !important;
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator {
   color: #133e87 !important;
   background-color: #133e87 !important;
