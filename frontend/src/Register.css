@@ -1,43 +1,43 @@
-.reg-wrapper{
-    width: 50% !important;
-    max-width: 500px;
-    background-color: white !important;
-    border: 2px solid #133E87 !important;
-    border-radius: 20px;
-    padding: 30px !important;
+.reg-wrapper {
+  width: 50% !important;
+  max-width: 500px;
+  background-color: white !important;
+  border: 2px solid #133e87 !important;
+  border-radius: 20px;
+  padding: 30px !important;
 }
-.row{
-    padding: 10px !important;
+.row {
+  padding: 10px !important;
 }
-.react-datepicker-wrapper{
-    padding: 0px !important;
-}
-
-.select__control{
-    border: 2px solid #133E87 !important;
-    border-radius: 10px !important;
-}
-makeanimated{
-    padding: 0px !important;
+.react-datepicker-wrapper {
+  padding: 0px !important;
 }
 
-.select{
-    background-color: rgb(96, 139, 193);
+.select__control {
+  border: 2px solid #133e87 !important;
+  border-radius: 10px !important;
+}
+makeanimated {
+  padding: 0px !important;
 }
 
-.select__multi-value{
-    background-color: rgb(96, 139, 193) !important;
-    color: white !important;
-    border-radius: 5px !important;
-}
-.select__multi-value__label{
-    color: white !important;
+.select {
+  background-color: rgb(96, 139, 193);
 }
 
-.name-highlight{
-    color: #133E87 !important;
-    font-weight: bold !important;
-    font-style: italic !important;
+.select__multi-value {
+  background-color: rgb(96, 139, 193) !important;
+  color: white !important;
+  border-radius: 5px !important;
+}
+.select__multi-value__label {
+  color: white !important;
+}
+
+.name-highlight {
+  color: #133e87 !important;
+  font-weight: bold !important;
+  font-style: italic !important;
 }
 
 .password-hints {
@@ -46,12 +46,11 @@ makeanimated{
   background-color: #f8f9fa;
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #133E87;
+  border: 1px solid #133e87;
   font-size: 0.9rem;
   width: fit-content;
   min-width: 50%;
   height: fit-content !important;
-
 }
 
 .password-hints .valid {
@@ -63,15 +62,10 @@ makeanimated{
   color: red;
 }
 
-.basic-multi-select{
-    width: 100% !important;
-    padding: 0px !important;
+.basic-multi-select {
+  width: 100% !important;
+  padding: 0px !important;
 }
-
-
-
-
-
 
 @media (max-width: 768px) {
   .reg-wrapper {
@@ -80,8 +74,27 @@ makeanimated{
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-    color: #133E87 !important;
-    background-color: #133E87 !important;
-    border-radius: 50% !important;
-    padding: 4px !important;
+  color: #133e87 !important;
+  background-color: #133e87 !important;
+  border-radius: 50% !important;
+  padding: 4px !important;
+}
+
+select.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-color: white;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23133e87'/%3E%3Cpolyline points='8,10 12,14 16,10' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 24px 24px;
+
+  padding-right: 3rem; /* hely a nyílnak */
+  border-radius: 0.375rem;
+  border: 1px solid #ccc;
+  height: 40px;
 }

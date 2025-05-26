@@ -32,6 +32,7 @@ function Register() {
       last_name: lastName,
       email: email,
       password: password,
+      gender: gender,
       date_of_birth: selectedDate.toISOString().split("T")[0], // yyyy-mm-dd formátum
       complaints: complaints.map((c) => c.value), // csak a value-k kellenek
     };
@@ -64,6 +65,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [complaints, setComplaints] = useState([]);
+  const [gender, setGender] = useState([]);
   const [showGreeting, setShowGreeting] = useState(false);
 
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
@@ -124,6 +126,21 @@ function Register() {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
+          </div>
+
+          <div className="row">
+            <label htmlFor="gender">Nem</label>
+            <select
+              id="gender"
+              className="form-control reg custom-select"
+              required
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+            >
+              <option value="">Válassz</option>
+              <option value="Férfi">Férfi</option>
+              <option value="Nő">Nő</option>
+            </select>
           </div>
 
           <div className="row">
