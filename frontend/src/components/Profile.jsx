@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import Hero from "./Hero";
 import { IoPersonAdd } from "react-icons/io5";
 import "../Register.css";
@@ -10,6 +10,8 @@ import Creatable from "react-select/creatable";
 import PrevTreatment from "./PrevTreatment";
 import "../Profile.css";
 import { FaUserEdit } from "react-icons/fa";
+import { AuthContext } from "../AuthContext";
+import { Navigate } from "react-router-dom";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -25,6 +27,12 @@ const options = [
 ];
 
 function Profile() {
+  const { user, logout } = useContext(AuthContext);
+
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,6 +55,33 @@ function Profile() {
     console.log("Születési dátum:", selectedDate.toLocaleDateString());
     console.log("Panaszok:", complaints.map((c) => c.label).join(", "));
   };
+
+  const handleLogout = () => {
+    logout();
+    // sima átirányítás
+    window.location.href = "/";
+  };
+
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.firstName || "");
+      setLastName(user.lastName || "");
+      setEmail(user.email || "");
+      // Ha van születési dátum a userben, pl. user.birthDate, akkor beállítjuk
+      if (user.birthDate) {
+        setSelectedDate(new Date(user.birthDate));
+      }
+      // Ha panaszok vannak, pl. user.complaints egy tömb, akkor betöltjük így:
+      if (user.complaints) {
+        // Feltételezve, hogy user.complaints egy string tömb, pl. ["chocolate", "vanilla"]
+        const loadedComplaints = user.complaints.map((c) => ({
+          value: c,
+          label: c.charAt(0).toUpperCase() + c.slice(1),
+        }));
+        setComplaints(loadedComplaints);
+      }
+    }
+  }, [user]);
 
   return (
     <div>
@@ -100,7 +135,7 @@ function Profile() {
                 id="validationDefaultUsername"
                 placeholder="E-mail cím"
                 required
-                value="example@example.com"
+                value={email}
                 disabled
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -141,14 +176,13 @@ function Profile() {
               </div>
             )}
 
-            <div className="row">
-              <label htmlFor="validationDefault05">Születési dátum</label>
-              <input
-                type="date"
-                className="form-control reg"
-                id="validationDefault05"
-              />
-            </div>
+            <input
+              type="date"
+              className="form-control reg"
+              id="validationDefault05"
+              value={selectedDate.toISOString().slice(0, 10)} // yyyy-mm-dd formátum
+              onChange={(e) => setSelectedDate(new Date(e.target.value))}
+            />
 
             <div className="row">
               <label htmlFor="complaints">Panaszok (nem kötelező)</label>
@@ -176,6 +210,12 @@ function Profile() {
               type="submit"
             >
               Módosítások mentése
+            </button>
+            <button
+              className="btn btn-secondary btn-lg mt-4 mx-2 px-4 gap-3"
+              onClick={handleLogout}
+            >
+              Kijelentkezés
             </button>
           </form>
         </div>

@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../DatePickerComponent.css";
 import makeAnimated from "react-select/animated";
 import Creatable from "react-select/creatable";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import GoogleLoginButton from "./LoginWithGoogle";
 
 const options = [

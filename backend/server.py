@@ -7,6 +7,10 @@ from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import requests
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
+
+
 
 
 
@@ -15,6 +19,8 @@ POSTGRES_PW = os.getenv("PSQL_PW")
 
 app = Flask(__name__)
 CORS(app)  
+app.config['JWT_SECRET_KEY'] = 'ez_egy_jo_titkos_kulcs'  # ezt biztonságosabb helyről töltsd be, pl .env
+jwt = JWTManager(app)
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://postgres:1948@localhost:5432/talppont"
@@ -69,11 +75,24 @@ with app.app_context():
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
-    print(data)  
     email = data.get('email')
     password = data.get('password')
 
-    return jsonify({"pass": password, "email": email})
+    if not email or not password:
+        return jsonify({'error': 'Hiányzó email vagy jelszó'}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'error': 'Nincs ilyen felhasználó'}), 404
+
+    if not user.password:
+        return jsonify({'error': 'Ez a felhasználó nem használ jelszavas bejelentkezést'}), 400
+
+    if check_password_hash(user.password, password):
+        access_token = create_access_token(identity=user.id)
+        return jsonify({'message': 'Sikeres belépés', 'access_token': access_token}), 200
+    else:
+        return jsonify({'error': 'Hibás jelszó'}), 401
 
 
 @app.route('/api/register', methods=['POST'])
@@ -166,6 +185,26 @@ def register_google():
 
     return jsonify({'message': 'Google-felhasználó sikeresen regisztrálva', 'user_id': new_user.id}), 201
 
+@app.route('/api/profile', methods=['GET'])
+@jwt_required()
+def profile():
+    user_id = get_jwt_identity()  # ezt a create_access_token-be tett user.id alapján kapod meg
+
+    user = db.session.execute(db.select(User).filter_by(id=user_id)).scalar_one_or_none()
+    if not user:
+        return jsonify({'error': 'Felhasználó nem található'}), 404
+
+    user_data = {
+        'id': user.id,
+        'name': user.name,
+        'email': user.email,
+        'gender': user.gender,
+        'date_of_birth': user.date_of_birth.strftime("%Y-%m-%d") if user.date_of_birth else None,
+        # Panaszokat is visszaadhatod, ha akarod:
+        'complaints': [complaint.description for complaint in user.complaints]
+    }
+
+    return jsonify(user_data), 200
 
 
 

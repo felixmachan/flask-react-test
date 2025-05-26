@@ -5,15 +5,20 @@ import { IoIosLogIn } from "react-icons/io";
 import Hero from "./Hero";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLoginButton from "./LoginWithGoogle";
+import { useContext } from "react";
+import { AuthContext } from "../AuthContext.jsx"; // <-- ez így helyes
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // megakadályozza az alapértelmezett form submit-et (oldalfrissítés)
+    e.preventDefault();
     setLoading(true);
     setError(null);
 
@@ -26,15 +31,14 @@ function Login() {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Hiba a bejelentkezés során");
+        throw new Error(data.error || "Hiba a bejelentkezés során");
       }
 
-      const data = await res.json();
-      console.log(data.message);
-      console.log("Sikeres bejelentkezés:", data);
-      // Itt pl. elmentheted a token-t, átirányíthatsz más oldalra, stb.
+      // 💡 Ezt hívjuk meg: token mentése contextbe + localStorage-be
+      login(data.access_token);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -121,6 +125,7 @@ function Login() {
                   text="Lépj be Google fiókkal"
                 />
               </GoogleOAuthProvider>
+              {error && <div className="alert alert-danger mt-3">{error}</div>}
             </form>
             <div className="text-center mt-3">
               <a href="#">Elfelejtetted a jelszavad?</a>

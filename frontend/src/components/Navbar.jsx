@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, useLocation } from "react-router-dom";
 import "../Navbar.css";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { AuthContext } from "../AuthContext";
 
 function CollapsibleExample() {
+  const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
@@ -58,9 +60,15 @@ function CollapsibleExample() {
             <Nav.Link as={Link} to="/contact">
               <span className="nav-text">Kapcsolat</span>
             </Nav.Link>
-            <Nav.Link as={Link} to="/login">
-              <span className="nav-text login-button">Bejelentkezés</span>
-            </Nav.Link>
+            {user ? (
+              <Nav.Link as={Link} to="/profile">
+                <span className="nav-text">Profilom</span>
+              </Nav.Link>
+            ) : (
+              <Nav.Link as={Link} to="/login">
+                <span className="nav-text login-button">Bejelentkezés</span>
+              </Nav.Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
