@@ -1,27 +1,46 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from sqlalchemy import Column, Integer, String, Date
+from flask_jwt_extended import JWTManager, create_access_token, decode_token
+from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
+
+from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy.exc import NoResultFound
+
 import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 
 
 
-load_dotenv() 
-POSTGRES_PW = os.getenv("PSQL_PW")
+
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '../frontend/', '.env'))
+
 
 app = Flask(__name__)
 CORS(app)  
+mail = Mail(app)
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://postgres:1948@localhost:5432/talppont"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# SQLAlchemy példány inicializálása
 db = SQLAlchemy(app)
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False  
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")  
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD") 
+app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
+
+jwt = JWTManager(app)
+
+
 
 # user db
 class User(db.Model):
@@ -32,6 +51,7 @@ class User(db.Model):
     gender = db.Column(db.String(10))
     date_of_birth = db.Column(db.Date)
     password = db.Column(db.String(300))
+    is_active = db.Column(db.Boolean, default=False)
     
     bookings = db.relationship('Booking', back_populates='user', cascade="all, delete-orphan")
     complaints = db.relationship('Complaint', secondary='user_complaints', back_populates='users')
@@ -66,6 +86,24 @@ with app.app_context():
     db.create_all()
 
 
+def generate_confirmation_token(user_id):
+    access_token = create_access_token(identity=user_id, expires_delta=timedelta(hours=1))
+    return access_token
+
+
+def send_confirmation_email(user_email, token):
+    confirm_url = f"http://localhost:3000/confirm/{token}"  # vagy frontend url
+    msg = Message("Email megerősítés", recipients=[user_email])
+    msg.body = f"Kérlek kattints ide a fiók megerősítéséhez: {confirm_url}"
+    mail.send(msg)
+
+
+
+
+
+
+
+
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -74,6 +112,13 @@ def login():
     password = data.get('password')
 
     return jsonify({"pass": password, "email": email})
+
+
+
+
+
+
+
 
 
 @app.route('/api/register', methods=['POST'])
@@ -99,7 +144,8 @@ def register():
         name=f"{first_name} {last_name}",
         password=hashed_password,
         date_of_birth=date_of_birth,
-        gender=gender
+        gender=gender,
+        is_active=False 
     )
     db.session.add(new_user)
     db.session.flush()  # flush-oljuk, hogy megkapjuk az új user id-jét
@@ -117,9 +163,19 @@ def register():
 
     db.session.commit()  # egyszer commitoljuk az egész tranzakciót
 
+    token = generate_confirmation_token(new_user.id)
+    send_confirmation_email(new_user.email, token)
+
+
     return jsonify({'message': 'Registration successful', 'user_id': new_user.id}), 201
 
-import requests  # szükséges a Google API híváshoz
+
+
+
+
+
+
+
 
 @app.route('/api/register/google', methods=['POST'])
 def register_google():
@@ -165,6 +221,37 @@ def register_google():
     db.session.commit()
 
     return jsonify({'message': 'Google-felhasználó sikeresen regisztrálva', 'user_id': new_user.id}), 201
+
+
+
+
+
+
+
+@app.route('/api/confirm/<token>', methods=['GET'])
+def confirm_email(token):
+    try:
+        decoded = decode_token(token)
+        user_id = decoded['sub']
+    except Exception as e:
+        print("Token decode error:", e)
+        return jsonify({"error": "Érvénytelen vagy lejárt token"}), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "Felhasználó nem található"}), 404
+
+    if user.is_active:
+        return jsonify({"message": "Ez a fiók már aktiválva van."}), 200
+
+    user.is_active = True
+    db.session.commit()
+    return jsonify({"message": "Sikeres fiókaktiválás!"}), 200
+
+
+
+
+
 
 
 
