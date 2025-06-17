@@ -52,12 +52,14 @@ jwt = JWTManager(app)
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+    fname = db.Column(db.String(50))
+    lname = db.Column(db.String(50))
     email = db.Column(db.String(100), unique=True, nullable=False)
     gender = db.Column(db.String(10))
     date_of_birth = db.Column(db.Date)
     password = db.Column(db.String(300))
     is_active = db.Column(db.Boolean, default=False)
+    is_google_user = db.Column(db.Boolean, default=False)
     
     bookings = db.relationship('Booking', back_populates='user', cascade="all, delete-orphan")
     complaints = db.relationship('Complaint', secondary='user_complaints', back_populates='users')
@@ -146,11 +148,13 @@ def register():
     hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
     new_user = User(
         email=email,
-        name=f"{first_name} {last_name}",
+        fname=first_name,
+        lname=last_name,
         password=hashed_password,
         date_of_birth=date_of_birth,
         gender=gender,
-        is_active=False 
+        is_active=False,
+        is_google_user=False  # Ez a mező jelzi, hogy nem Google-felhasználó 
     )
     db.session.add(new_user)
     db.session.flush()  # flush-oljuk, hogy megkapjuk az új user id-jét
@@ -201,6 +205,10 @@ def register_google():
 
     email = google_data.get('email')
     name = google_data.get('name')
+    parts = name.split(" ", 1)  # Elválasztjuk az első és utolsó nevet
+    fname = parts[0] if len(parts) > 0 else ""
+    lname = parts[1] if len(parts) > 0 else ""
+
 
     if not email:
         return jsonify({'error': 'A Google nem adott vissza e-mail címet'}), 400
@@ -214,17 +222,19 @@ def register_google():
     # Új felhasználó létrehozása jelszó nélkül
     new_user = User(
         email=email,
-        name=name,
+        fname=fname,
+        lname=lname,
         password=None,
         date_of_birth=None,
         gender=None,
-        is_active=True  # Google-felhasználók automatikusan aktívak
+        is_active=True,
+        is_google_user=True  # Ez a mező jelzi, hogy nem Google-felhasználó 
     )
 
     db.session.add(new_user)
     db.session.commit()
 
-    jwt_token = create_access_token(identity=new_user.id)
+    jwt_token = create_access_token(identity=str(new_user.id))
 
     return jsonify({
     'message': 'Sikeres bejelentkezés Google-fiókkal',
@@ -276,7 +286,8 @@ def login_google():
     'message': 'Sikeres bejelentkezés Google-fiókkal',
     'user': {
         'id': user.id,
-        'name': user.name,
+        'fname': user.fname,
+        'lname': user.lname,
         'email': user.email,
     },
     'token': jwt_token,
@@ -299,7 +310,11 @@ def get_current_user():
         return jsonify({
             "id": user.id,
             "email": user.email,
-            "name": user.name,
+            "fname": user.fname,
+            "lname": user.lname,
+            "gender": user.gender,
+            "date_of_birth": user.date_of_birth.strftime("%Y-%m-%d") if user.date_of_birth else None,
+            "complaints": [complaint.description for complaint in user.complaints],
         })
     return jsonify({"error": "User not found"}), 404
 

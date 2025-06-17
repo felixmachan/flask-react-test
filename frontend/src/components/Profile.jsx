@@ -11,6 +11,7 @@ import PrevTreatment from "./PrevTreatment";
 import "../Profile.css";
 import { FaUserEdit } from "react-icons/fa";
 import { useAuth } from "./AuthContext";
+import { useEffect } from "react";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -41,6 +42,38 @@ function Profile() {
 
   const logout = useAuth().logout;
   const { user } = useAuth();
+
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    // Csak ha van token, akkor fetch
+
+    if (!token) return;
+
+    fetch("http://localhost:5000/api/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // token küldése a headerben
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Nem sikerült lekérni a profil adatokat");
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Profil adatok:", data);
+        setFirstName(data.fname || "");
+        setLastName(data.lname || "");
+        setEmail(data.email || "");
+        setSelectedDate(new Date(data.date_of_birth) || new Date());
+        setComplaints(data.complaints || []);
+        // szükség szerint állíts be egyéb mezőket is
+      })
+      .catch((err) => {
+        console.error(err);
+        // Pl. token lejárt -> kijelentkeztetés
+        logout();
+      });
+  }, [token, logout]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -104,7 +137,7 @@ function Profile() {
                 id="validationDefaultUsername"
                 placeholder="E-mail cím"
                 required
-                value="example@example.com"
+                value={email}
                 disabled
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -151,6 +184,7 @@ function Profile() {
                 type="date"
                 className="form-control reg"
                 id="validationDefault05"
+                value={selectedDate.toISOString().split("T")[0]}
               />
             </div>
 
@@ -183,7 +217,7 @@ function Profile() {
               </button>
               <button
                 className="btn btn-secondary btn-lg mt-4 px-4 gap-3 button l"
-                type="submit"
+                onClick={logout}
               >
                 Kijelentkezés
               </button>
