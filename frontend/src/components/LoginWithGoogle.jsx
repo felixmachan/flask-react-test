@@ -1,32 +1,48 @@
 import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const GoogleLoginButton = (props) => {
-  const login = useGoogleLogin({
+  const navigate = useNavigate();
+  const { login } = useAuth(); // AuthContext login függvény
+
+  const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log("Google token response:", tokenResponse);
-
       try {
-        const res = await fetch("http://localhost:5000/api/register/google", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            access_token: tokenResponse.access_token,
-          }),
-        });
+        const res = await fetch(
+          `http://localhost:5000/api/${props.mode}/google`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              access_token: tokenResponse.access_token,
+            }),
+          }
+        );
 
+        const data = await res.json();
+        console.log(data);
         if (res.ok) {
-          const data = await res.json();
-          console.log("Sikeres Google regisztráció:", data);
-          // Itt átirányíthatod a felhasználót vagy kiírhatsz egy üzenetet
+          console.log(`${props.mode} sikeres:`, data);
+
+          // Frissítsük az AuthContextet
+          console.log(data.user, data.token);
+          login(data.user, data.token);
+
+          // Tovább navigálás
+          if (props.mode === "register") {
+            navigate("/profile");
+          } else {
+            navigate("/");
+          }
         } else {
-          const error = await res.json();
-          console.error("Sikertelen Google regisztráció:", error);
+          console.error(`${props.mode} sikertelen:`, data);
         }
       } catch (err) {
-        console.error("Hálózati hiba:", err);
+        console.error("Hiba:", err);
       }
     },
     onError: () => {
@@ -36,7 +52,7 @@ const GoogleLoginButton = (props) => {
 
   return (
     <button
-      onClick={() => login()}
+      onClick={() => googleLogin()}
       className="btn btn-primary w-100 py-2 regist d-flex align-items-center justify-content-center gap-2"
     >
       {/* Google SVG logó */}

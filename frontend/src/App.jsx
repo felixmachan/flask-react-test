@@ -14,6 +14,7 @@ import Services from "./components/Services.jsx";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import Profile from "./components/Profile.jsx";
+import { AuthProvider } from "./components/AuthContext.jsx";
 
 // 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 
@@ -21,17 +22,19 @@ function App() {
   return (
     <div className="root">
       <Router>
-        <BasicExample />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/appointments" element={<Appointments />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-        <Footer />
+        <AuthProvider>
+          <BasicExample />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/appointments" element={<Appointments />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+          <Footer />
+        </AuthProvider>
       </Router>
     </div>
   );

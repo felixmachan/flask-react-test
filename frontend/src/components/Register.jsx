@@ -255,6 +255,7 @@ function Register() {
           )}
           <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
             <GoogleLoginButton
+              mode="register"
               className="btn btn-primary w-100 py-2 login"
               text="Regisztrálj Google fiókkal"
             />

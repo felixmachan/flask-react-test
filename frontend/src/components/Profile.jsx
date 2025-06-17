@@ -10,6 +10,7 @@ import Creatable from "react-select/creatable";
 import PrevTreatment from "./PrevTreatment";
 import "../Profile.css";
 import { FaUserEdit } from "react-icons/fa";
+import { useAuth } from "./AuthContext";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -37,6 +38,9 @@ function Profile() {
   const [isLengthValid, setIsLengthValid] = useState(false);
   const [hasNumber, setHasNumber] = useState(false);
   const [hasUppercase, setHasUppercase] = useState(false);
+
+  const logout = useAuth().logout;
+  const { user } = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -170,13 +174,20 @@ function Profile() {
                 megkönnyíted számomra a felkészülést a kezelésre.
               </label>
             </div>
-
-            <button
-              className="btn btn-primary btn-lg mt-4 px-4 gap-3 blue-bg button"
-              type="submit"
-            >
-              Módosítások mentése
-            </button>
+            <div className="buttonbox">
+              <button
+                className="btn btn-primary btn-lg mt-4 px-4 gap-3 blue-bg button"
+                type="submit"
+              >
+                Módosítások mentése
+              </button>
+              <button
+                className="btn btn-secondary btn-lg mt-4 px-4 gap-3 button l"
+                type="submit"
+              >
+                Kijelentkezés
+              </button>
+            </div>
           </form>
         </div>
 

@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, decode_token
+from flask_jwt_extended import JWTManager, create_access_token, decode_token, jwt_required, get_jwt_identity, verify_jwt_in_request, get_jwt
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 
@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import requests
+
+import jwt 
 
 
 
@@ -36,7 +38,11 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False  
 app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")  
 app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD") 
-app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
+
+app.config["JWT_COOKIE_SECURE"] = False
+app.config["JWT_TOKEN_LOCATION"] = ["cookies", "headers"]
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")  # Change this in your code!
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 
 jwt = JWTManager(app)
 
@@ -97,7 +103,8 @@ def send_confirmation_email(user_email, token):
     msg.body = f"Kérlek kattints ide a fiók megerősítéséhez: {confirm_url}"
     mail.send(msg)
 
-
+def get_user_by_id(user_id):
+    return User.query.get(user_id)
 
 
 
@@ -115,9 +122,7 @@ def login():
 
 
 
-
-
-
+################################################################################
 
 
 
@@ -171,9 +176,7 @@ def register():
 
 
 
-
-
-
+################################################################################
 
 
 
@@ -214,17 +217,95 @@ def register_google():
         name=name,
         password=None,
         date_of_birth=None,
-        gender=None
+        gender=None,
+        is_active=True  # Google-felhasználók automatikusan aktívak
     )
 
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'message': 'Google-felhasználó sikeresen regisztrálva', 'user_id': new_user.id}), 201
+    jwt_token = create_access_token(identity=new_user.id)
+
+    return jsonify({
+    'message': 'Sikeres bejelentkezés Google-fiókkal',
+    'user': {
+        'id': new_user.id,
+        'name': new_user.name,
+        'email': new_user.email,
+    },
+    'token': jwt_token,
+    'redirect': '/profile'
+    }), 201
 
 
 
+################################################################################
 
+
+
+@app.route('/api/login/google', methods=['POST'])
+def login_google():
+    data = request.get_json()
+    access_token = data.get('access_token')
+
+    if not access_token:
+        return jsonify({'error': 'Hiányzik az access token'}), 400
+
+    # Lekérdezzük a Google-felhasználói adatokat
+    google_userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
+    headers = {'Authorization': f'Bearer {access_token}'}
+    google_response = requests.get(google_userinfo_url, headers=headers)
+
+    if google_response.status_code != 200:
+        return jsonify({'error': 'Hibás vagy lejárt access token'}), 400
+
+    google_data = google_response.json()
+    email = google_data.get('email')
+
+    if not email:
+        return jsonify({'error': 'A Google nem adott vissza e-mail címet'}), 400
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({'error': 'Nincs ilyen Google-fiók regisztrálva'}), 404
+
+    jwt_token = create_access_token(identity=str(user.id))
+
+    return jsonify({
+    'message': 'Sikeres bejelentkezés Google-fiókkal',
+    'user': {
+        'id': user.id,
+        'name': user.name,
+        'email': user.email,
+    },
+    'token': jwt_token,
+    'redirect': '/profile'
+}), 200
+
+
+
+################################################################################
+
+
+
+@app.route("/api/me", methods=["GET"])
+@jwt_required()
+def get_current_user():
+    user_id = get_jwt_identity()
+    print("Jelenlegi felhasználó ID:", user_id)
+    user = get_user_by_id(user_id)  
+    if user:
+        return jsonify({
+            "id": user.id,
+            "email": user.email,
+            "name": user.name,
+        })
+    return jsonify({"error": "User not found"}), 404
+
+
+
+################################################################################
 
 
 
@@ -250,10 +331,7 @@ def confirm_email(token):
 
 
 
-
-
-
-
+################################################################################
 
 
 

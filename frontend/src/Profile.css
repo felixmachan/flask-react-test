@@ -1,7 +1,30 @@
-.profile-wrapper{
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    gap: 20px;
-    align-self: flex-start;
+.profile-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-self: flex-start;
+}
+
+.buttonbox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between !important;
+  gap: 10px;
+}
+
+.logout {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid grey !important;
+  padding: 10px 20px !important;
+  cursor: pointer !important;
+  margin-left: 15px !important;
+}
+
+@media (max-width: 768px) {
+  .buttonbox {
+    flex-direction: column;
+    align-items: center; /* középre igazítás */
+  }
 }

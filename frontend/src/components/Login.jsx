@@ -117,6 +117,7 @@ function Login() {
                 clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
               >
                 <GoogleLoginButton
+                  mode="login"
                   className="btn btn-primary w-100 py-2 login"
                   text="Lépj be Google fiókkal"
                 />
