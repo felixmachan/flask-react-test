@@ -251,9 +251,11 @@ function Register() {
           <button
             className="btn w-100 mt-3 mb-3 px-4 gap-3 blue-bg"
             type="submit"
+            style={{ pointerEvents: "auto" }}
           >
             Regisztráció
           </button>
+
           <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
             <GoogleLoginButton
               mode="register"
