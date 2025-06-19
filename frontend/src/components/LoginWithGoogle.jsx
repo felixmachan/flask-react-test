@@ -6,6 +6,7 @@ import { useAuth } from "./AuthContext";
 const GoogleLoginButton = (props) => {
   const navigate = useNavigate();
   const { login } = useAuth(); // AuthContext login függvény
+  const setError = props.setError;
 
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
@@ -17,6 +18,7 @@ const GoogleLoginButton = (props) => {
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify({
               access_token: tokenResponse.access_token,
             }),
@@ -24,7 +26,6 @@ const GoogleLoginButton = (props) => {
         );
 
         const data = await res.json();
-        console.log(data);
         if (res.ok) {
           console.log(`${props.mode} sikeres:`, data);
 
@@ -40,13 +41,24 @@ const GoogleLoginButton = (props) => {
           }
         } else {
           console.error(`${props.mode} sikertelen:`, data);
+          if (setError) {
+            setError(
+              data.error || "Hiba történt a Google bejelentkezés során."
+            );
+          }
         }
       } catch (err) {
         console.error("Hiba:", err);
+        if (setError) {
+          setError("Hiba történt a Google bejelentkezés során.");
+        }
       }
     },
     onError: () => {
       console.error("Google Login Failed");
+      if (setError) {
+        setError("Google bejelentkezés sikertelen.");
+      }
     },
   });
 

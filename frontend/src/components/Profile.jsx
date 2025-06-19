@@ -54,6 +54,7 @@ function Profile() {
       headers: {
         Authorization: `Bearer ${token}`, // token küldése a headerben
       },
+      credentials: "include",
     })
       .then((res) => {
         if (!res.ok) throw new Error("Nem sikerült lekérni a profil adatokat");
@@ -185,6 +186,7 @@ function Profile() {
                 className="form-control reg"
                 id="validationDefault05"
                 value={selectedDate.toISOString().split("T")[0]}
+                onChange={(e) => setSelectedDate(new Date(e.target.value))}
               />
             </div>
 

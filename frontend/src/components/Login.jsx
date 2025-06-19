@@ -23,12 +23,15 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.message || "Hiba a bejelentkezés során");
+        const errorMessage = data.error || "Hiba a bejelentkezés során";
+        console.log(errorMessage);
+        throw new Error(errorMessage || "Hiba a bejelentkezés során");
       }
 
       const data = await res.json();
@@ -97,6 +100,11 @@ function Login() {
                 <label className="form-check-label" htmlFor="checkDefault">
                   Emlékezz rám
                 </label>
+                {error && (
+                  <div className="alert alert-danger text-center" role="alert">
+                    {error}
+                  </div>
+                )}
               </div>
               <button
                 className="btn btn-primary w-100 py-2 login"
@@ -120,6 +128,7 @@ function Login() {
                   mode="login"
                   className="btn btn-primary w-100 py-2 login"
                   text="Lépj be Google fiókkal"
+                  setError={setError}
                 />
               </GoogleOAuthProvider>
             </form>

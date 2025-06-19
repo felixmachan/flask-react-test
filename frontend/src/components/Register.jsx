@@ -44,6 +44,7 @@ function Register() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", // EZ KELL a JWT sütikhez!
         body: JSON.stringify(dataToSend),
       });
 
@@ -241,6 +242,11 @@ function Register() {
               </label>
             </div>
           </div>
+          {errorMessage && (
+            <div className="alert alert-danger text-center" role="alert">
+              {errorMessage}
+            </div>
+          )}
 
           <button
             className="btn btn-primary  w-100 mt-3 mb-3 px-4 gap-3 blue-bg button"
@@ -258,6 +264,7 @@ function Register() {
               mode="register"
               className="btn btn-primary w-100 py-2 login"
               text="Regisztrálj Google fiókkal"
+              setError={setErrorMessage}
             />
           </GoogleOAuthProvider>
         </form>

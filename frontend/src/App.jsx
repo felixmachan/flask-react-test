@@ -15,6 +15,7 @@ import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import Profile from "./components/Profile.jsx";
 import { AuthProvider } from "./components/AuthContext.jsx";
+import ConfirmEmail from "./components/ConfirmEmail.jsx";
 
 // 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 
@@ -32,6 +33,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/confirm/:token" element={<ConfirmEmail />} />
           </Routes>
           <Footer />
         </AuthProvider>

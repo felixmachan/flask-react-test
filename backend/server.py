@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, decode_token, jwt_required, get_jwt_identity, verify_jwt_in_request, get_jwt
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
+from flask import render_template
 
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.exc import NoResultFound
@@ -23,7 +24,8 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '../frontend/', 
 
 
 app = Flask(__name__)
-CORS(app)  
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+
 mail = Mail(app)
 
 
@@ -45,6 +47,8 @@ app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")  # Change this in you
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 
 jwt = JWTManager(app)
+
+URL = "http://localhost:3000/"
 
 
 
@@ -99,10 +103,11 @@ def generate_confirmation_token(user_id):
     return access_token
 
 
-def send_confirmation_email(user_email, token):
-    confirm_url = f"http://localhost:3000/confirm/{token}"  # vagy frontend url
-    msg = Message("Email megerősítés", recipients=[user_email])
-    msg.body = f"Kérlek kattints ide a fiók megerősítéséhez: {confirm_url}"
+def send_confirmation_email(user_email, user_name, token):
+    confirm_url = f"{URL}/confirm/{token}"  # vagy frontend url
+    html = render_template('confirmation_email.html', name=user_name, confirmation_link=confirm_url)
+    msg = Message("✅ Talppont fiók aktiválás ", recipients=[user_email])
+    msg.body = html
     mail.send(msg)
 
 def get_user_by_id(user_id):
@@ -116,11 +121,33 @@ def get_user_by_id(user_id):
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
-    print(data)  
     email = data.get('email')
     password = data.get('password')
 
-    return jsonify({"pass": password, "email": email})
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({"error": "Nincs ilyen felhasználó"}), 404
+
+    if not check_password_hash(user.password, password):
+        return jsonify({"error": "Hibás jelszó"}), 401
+
+    if not user.is_active:
+        return jsonify({"error": "A fiók még nincs aktiválva. Kérlek ellenőrizd az emailedet."}), 403
+
+    jwt_token = create_access_token(identity=str(user.id))
+
+    return jsonify({
+        'message': 'Sikeres bejelentkezés',
+        'user': {
+            'id': user.id,
+            'fname': user.fname,
+            'lname': user.lname,
+            'email': user.email,
+        },
+        'token': jwt_token
+    }), 200
+
 
 
 
@@ -173,7 +200,8 @@ def register():
     db.session.commit()  # egyszer commitoljuk az egész tranzakciót
 
     token = generate_confirmation_token(new_user.id)
-    send_confirmation_email(new_user.email, token)
+    send_confirmation_email(new_user.email, f"{new_user.fname} {new_user.lname}", token)
+
 
 
     return jsonify({'message': 'Registration successful', 'user_id': new_user.id}), 201
@@ -206,8 +234,11 @@ def register_google():
     email = google_data.get('email')
     name = google_data.get('name')
     parts = name.split(" ", 1)  # Elválasztjuk az első és utolsó nevet
-    fname = parts[0] if len(parts) > 0 else ""
-    lname = parts[1] if len(parts) > 0 else ""
+    fname = parts[0]
+    if len(parts) > 1:
+        lname = parts[1] 
+    else:
+        lname = ""
 
 
     if not email:
@@ -240,7 +271,7 @@ def register_google():
     'message': 'Sikeres bejelentkezés Google-fiókkal',
     'user': {
         'id': new_user.id,
-        'name': new_user.name,
+        'name': f"{new_user.fname} {new_user.lname}",
         'email': new_user.email,
     },
     'token': jwt_token,
