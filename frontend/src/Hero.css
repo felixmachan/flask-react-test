@@ -1,42 +1,41 @@
-.hero{
-    background-color: #608BC1;
-    margin-top: 0px;
+.hero {
+  background-color: #608bc1;
+  margin-top: 0px;
 }
 
-.blue-bg{
-    background-color: #133E87 !important; /* Saját kék */
-    color: white !important; /* Fehér szöveg */
+.blue-bg {
+  background-color: #133e87 !important; /* Saját kék */
+  color: white !important; /* Fehér szöveg */
 }
 
-.lead{
-    font-weight: 400 !important; /* Normál vastagság */
+.lead {
+  font-weight: 400 !important; /* Normál vastagság */
 }
 
 .hero-icon {
-    font-size: 72px; /* vagy egy másik méret */
-    color: #000; /* Ha szükséges, állítsd be a kívánt színt */
+  font-size: 72px; /* vagy egy másik méret */
+  color: #000; /* Ha szükséges, állítsd be a kívánt színt */
 }
-button:hover{
+/* button:hover{
     box-shadow: 1px 1px 8px grey;
+} */
+
+.hero-wrapper {
+  margin-bottom: 40px;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
-
-.hero-wrapper{
-    margin-bottom: 40px;
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-}
-
-.wave-svg{
-    width: 100%;
-    display: block;
-    margin: 0 auto;
-    object-fit: cover;
-    overflow: -moz-hidden-unscrollable;
+.wave-svg {
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  object-fit: cover;
+  overflow: -moz-hidden-unscrollable;
 }
 
 @media (max-width: 768px) {
-    .wave-svg {
-      width: auto; /* Kép szélessége automatikusan igazodik telefonos nézethez */
-    }
+  .wave-svg {
+    width: auto; /* Kép szélessége automatikusan igazodik telefonos nézethez */
   }
+}

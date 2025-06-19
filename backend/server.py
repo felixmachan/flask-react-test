@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, decode_token, jwt_required, get_jwt_identity, verify_jwt_in_request, get_jwt
+from flask_jwt_extended import JWTManager, create_access_token, decode_token, jwt_required, get_jwt_identity, verify_jwt_in_request, get_jwt 
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
@@ -14,7 +14,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import requests
 
-import jwt 
+import jwt
+
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.header import Header
+from email.utils import formataddr
+from email.message import EmailMessage
 
 
 
@@ -24,7 +31,7 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '../frontend/', 
 
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+CORS(app, supports_credentials=True, origins=["http://localhost:5173", "http://192.168.1.2:5173"])
 
 mail = Mail(app)
 
@@ -48,7 +55,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 
 jwt = JWTManager(app)
 
-URL = "http://localhost:3000/"
+FRONTEND_URL = "http://localhost:5173/"
 
 
 
@@ -104,14 +111,46 @@ def generate_confirmation_token(user_id):
 
 
 def send_confirmation_email(user_email, user_name, token):
-    confirm_url = f"{URL}/confirm/{token}"  # vagy frontend url
-    html = render_template('confirmation_email.html', name=user_name, confirmation_link=confirm_url)
-    msg = Message("✅ Talppont fiók aktiválás ", recipients=[user_email])
-    msg.body = html
-    mail.send(msg)
+    confirm_url = f"http://localhost:5173/confirm/{token}"
+    
+    # Render HTML body Flask sablonból
+    html = render_template("confirmation_email.html", name=user_name, confirmation_link=confirm_url)
+
+    # Email objektum létrehozása
+    msg = EmailMessage()
+    msg["Subject"] = "✅ Talppont fiók aktiválás"
+    msg["From"] = os.getenv("MAIL_USERNAME")
+    msg["To"] = user_email
+
+    # HTML tartalom beállítása (ez automatikusan UTF-8 kódolású lesz)
+    msg.set_content("Ez az email HTML-t tartalmaz. Kérlek, használj HTML-kompatibilis email klienst.")
+    msg.add_alternative(html, subtype="html")
+
+    # SMTP beállítások
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+    sender_email = os.getenv("MAIL_USERNAME")
+    sender_password = os.getenv("MAIL_PASSWORD")
+
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+        print(f"Sikeresen elküldve: {user_email}")
+        return True
+    except Exception as e:
+        print(f"Email küldési hiba (EmailMessage): {e}")
+        return False
+    """ try:
+        mail.send(msg)
+    except Exception as e:
+        print(f"Email küldési hiba: {e}")
+    return jsonify({'error': 'Nem sikerült elküldeni az aktiváló emailt'}), 500"""
 
 def get_user_by_id(user_id):
-    return User.query.get(user_id)
+    return User.query.get(user_id) 
 
 
 
@@ -199,7 +238,7 @@ def register():
 
     db.session.commit()  # egyszer commitoljuk az egész tranzakciót
 
-    token = generate_confirmation_token(new_user.id)
+    token = generate_confirmation_token(str(new_user.id))
     send_confirmation_email(new_user.email, f"{new_user.fname} {new_user.lname}", token)
 
 
@@ -358,7 +397,8 @@ def get_current_user():
 @app.route('/api/confirm/<token>', methods=['GET'])
 def confirm_email(token):
     try:
-        decoded = decode_token(token)
+        todecode = str(token)
+        decoded = decode_token(todecode)
         user_id = decoded['sub']
     except Exception as e:
         print("Token decode error:", e)

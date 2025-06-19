@@ -5,6 +5,8 @@
   border: 2px solid #133e87 !important;
   border-radius: 20px;
   padding: 30px !important;
+  position: relative;
+  z-index: 10;
 }
 .row {
   padding: 10px !important;

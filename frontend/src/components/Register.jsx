@@ -67,7 +67,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [complaints, setComplaints] = useState([]);
-  const [gender, setGender] = useState([]);
+  const [gender, setGender] = useState("");
   const [showGreeting, setShowGreeting] = useState(false);
 
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
@@ -249,16 +249,11 @@ function Register() {
           )}
 
           <button
-            className="btn btn-primary  w-100 mt-3 mb-3 px-4 gap-3 blue-bg button"
+            className="btn w-100 mt-3 mb-3 px-4 gap-3 blue-bg"
             type="submit"
           >
             Regisztráció
           </button>
-          {errorMessage && (
-            <div className="alert alert-danger" role="alert">
-              {errorMessage}
-            </div>
-          )}
           <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
             <GoogleLoginButton
               mode="register"

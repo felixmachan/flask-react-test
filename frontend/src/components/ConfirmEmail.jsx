@@ -9,6 +9,7 @@ function ConfirmEmail() {
   useEffect(() => {
     const confirm = async () => {
       try {
+        console.log("ConfirmEmail useEffect: token:", token);
         const res = await fetch(`http://localhost:5000/api/confirm/${token}`);
         const data = await res.json();
 
