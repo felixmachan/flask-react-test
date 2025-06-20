@@ -5,8 +5,10 @@ import { IoIosLogIn } from "react-icons/io";
 import Hero from "./Hero";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLoginButton from "./LoginWithGoogle";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -35,9 +37,10 @@ function Login() {
       }
 
       const data = await res.json();
+      localStorage.setItem("token", data.token); // token tárolása a helyi tárolóban
       console.log(data.message);
       console.log("Sikeres bejelentkezés:", data);
-      // Itt pl. elmentheted a token-t, átirányíthatsz más oldalra, stb.
+      navigate("/");
     } catch (err) {
       setError(err.message);
     } finally {

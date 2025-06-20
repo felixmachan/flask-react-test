@@ -78,12 +78,35 @@ function Profile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Keresztnév:", firstName);
-    console.log("Vezetéknév:", lastName);
-    console.log("Email:", email);
-    console.log("Jelszó:", password);
-    console.log("Születési dátum:", selectedDate.toLocaleDateString());
-    console.log("Panaszok:", complaints.map((c) => c.label).join(", "));
+
+    const token = localStorage.getItem("token");
+
+    fetch("http://localhost:5000/api/change-data", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        fname: firstName,
+        lname: lastName,
+        date_of_birth: selectedDate.toISOString().split("T")[0],
+        complaints: complaints.map((c) => c.value), // vagy label, ha az az azonosító
+        password: password, // lehet üres is, backend kezeli
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Mentés sikertelen");
+        return res.json();
+      })
+      .then((data) => {
+        alert("Profil sikeresen frissítve!");
+        setPassword(""); // jelszó mező ürítése
+      })
+      .catch((err) => {
+        console.error("Hiba a mentés során:", err);
+        alert("Hiba történt a mentés közben.");
+      });
   };
 
   return (
@@ -151,7 +174,6 @@ function Profile() {
                 className="form-control reg"
                 id="validationDefault03"
                 placeholder="Jelszó"
-                required
                 value={password}
                 onFocus={() => setIsPasswordFocused(true)}
                 onBlur={() => setIsPasswordFocused(false)}

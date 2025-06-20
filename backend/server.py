@@ -419,7 +419,58 @@ def confirm_email(token):
 
 ################################################################################
 
+@app.route('/api/change-data', methods=['PUT'])
+@jwt_required()
+def change_data():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "Felhasználó nem található"}), 404
 
+    data = request.get_json()
+
+    # Alap adatok frissítése
+    user.fname = data.get('fname', user.fname)
+    user.lname = data.get('lname', user.lname)
+
+    dob_str = data.get('date_of_birth')
+    if dob_str:
+        try:
+            user.date_of_birth = datetime.strptime(dob_str, '%Y-%m-%d').date()
+        except ValueError:
+            return jsonify({"error": "Hibás születési dátum formátum"}), 400
+
+    # Jelszó frissítés, ha megadták és nem üres
+    new_password = data.get('password', '')
+    if new_password:
+        user.password = generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
+
+    # Panaszok kezelése (complaints)
+    new_complaints = data.get('complaints', [])
+    if isinstance(new_complaints, list):
+        # Kitöröljük a régi kapcsolatokat
+        user.complaints.clear()
+
+        # Új panaszokat beszúrjuk / létrehozzuk, majd hozzárendeljük
+        for complaint_desc in new_complaints:
+            complaint = Complaint.query.filter_by(description=complaint_desc).first()
+            if not complaint:
+                complaint = Complaint(description=complaint_desc)
+                db.session.add(complaint)
+                db.session.flush()  # hogy legyen id-je
+            user.complaints.append(complaint)
+    else:
+        return jsonify({"error": "Panaszok formátuma hibás"}), 400
+
+    try:
+        db.session.commit()
+        return jsonify({"message": "Adatok sikeresen frissítve"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Mentési hiba", "details": str(e)}), 500
+
+
+#################################################################################
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
