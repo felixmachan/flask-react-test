@@ -12,6 +12,7 @@ import "../Profile.css";
 import { FaUserEdit } from "react-icons/fa";
 import { useAuth } from "./AuthContext";
 import { useEffect } from "react";
+import { HashLoader } from "react-spinners";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -34,11 +35,14 @@ function Profile() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [complaints, setComplaints] = useState([]);
   const [showGreeting, setShowGreeting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [isLengthValid, setIsLengthValid] = useState(false);
   const [hasNumber, setHasNumber] = useState(false);
   const [hasUppercase, setHasUppercase] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const logout = useAuth().logout;
   const { user } = useAuth();
@@ -78,7 +82,7 @@ function Profile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const token = localStorage.getItem("token");
 
     fetch("http://localhost:5000/api/change-data", {
@@ -100,12 +104,15 @@ function Profile() {
         return res.json();
       })
       .then((data) => {
-        alert("Profil sikeresen frissítve!");
         setPassword(""); // jelszó mező ürítése
+        setSuccessMessage("Profil sikeresen frissítve!");
+        setTimeout(() => setSuccessMessage(""), 3000);
       })
       .catch((err) => {
         console.error("Hiba a mentés során:", err);
-        alert("Hiba történt a mentés közben.");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -121,6 +128,17 @@ function Profile() {
           <div>
             <h1 className="text-center mt-2">Profilom</h1>
           </div>
+          {loading && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "20px 0",
+              }}
+            >
+              <HashLoader color="#608bc1" size={50} />
+            </div>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="row">
               <label htmlFor="validationDefault01">Keresztnév</label>
@@ -232,6 +250,12 @@ function Profile() {
                 megkönnyíted számomra a felkészülést a kezelésre.
               </label>
             </div>
+            {successMessage && (
+              <div className="alert alert-success text-center" role="alert">
+                {successMessage}
+              </div>
+            )}
+
             <div className="buttonbox">
               <button
                 className="btn btn-primary btn-lg mt-4 px-4 gap-3 blue-bg button"
