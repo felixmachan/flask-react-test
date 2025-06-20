@@ -11,11 +11,11 @@ function CollapsibleExample() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, authChanged } = useAuth();
 
   useEffect(() => {
     setIsOpen(false);
-  }, [location]);
+  }, [location, authChanged]);
 
   const handleToggle = () => setIsOpen(!isOpen);
 

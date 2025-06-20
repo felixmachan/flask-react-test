@@ -23,6 +23,8 @@ from email.header import Header
 from email.utils import formataddr
 from email.message import EmailMessage
 
+from itsdangerous import URLSafeTimedSerializer
+
 
 
 
@@ -471,6 +473,84 @@ def change_data():
 
 
 #################################################################################
+
+
+
+
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+serializer = URLSafeTimedSerializer(SECRET_KEY)
+
+@app.route('/api/forgot-password', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    email = data.get('email')
+    if not email:
+        return jsonify({'error': 'Hiányzik az email cím'}), 400
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        # Biztonsági okból ne áruljuk el, hogy nem létezik az email, csak küldjünk visszajelzést
+        return jsonify({'message': 'Ha létezik ilyen email, küldtünk egy visszaállító linket.'}), 200
+    
+    token = serializer.dumps(email, salt='password-reset-salt')
+    reset_url = f"http://localhost:5173/reset-password/{token}"
+    
+    # Itt küldj emailt (használhatod a send_confirmation_email-t módosítva)
+    html = render_template("reset_password_email.html", reset_url=reset_url, name=user.fname)
+    
+    msg = EmailMessage()
+    msg["Subject"] = "TalpPont Jelszó visszaállítás"
+    msg["From"] = os.getenv("MAIL_USERNAME")
+    msg["To"] = email
+    msg.set_content("Kérlek, használd a jelszó visszaállító linket.")
+    msg.add_alternative(html, subtype="html")
+    
+    try:
+        with smtplib.SMTP(app.config['MAIL_SERVER'], app.config['MAIL_PORT']) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(os.getenv("MAIL_USERNAME"), os.getenv("MAIL_PASSWORD"))
+            server.send_message(msg)
+    except Exception as e:
+        print(f"Email küldési hiba: {e}")
+        return jsonify({"error": "Nem sikerült elküldeni az emailt."}), 500
+    
+    return jsonify({'message': 'Ha létezik ilyen email, küldtünk egy visszaállító linket.'}), 200
+
+
+
+#############################################################################
+
+
+
+@app.route('/api/reset-password/<token>', methods=['POST'])
+def reset_password(token):
+    data = request.get_json()
+    new_password = data.get('new_password')
+    confirm_password = data.get('confirm_password')
+    
+    if not new_password or not confirm_password:
+        return jsonify({'error': 'Mindkét jelszó mező kitöltése kötelező.'}), 400
+    if new_password != confirm_password:
+        return jsonify({'error': 'A jelszavak nem egyeznek.'}), 400
+    
+    try:
+        email = serializer.loads(token, salt='password-reset-salt', max_age=3600)  # 1 óra érvényesség
+    except Exception as e:
+        return jsonify({'error': 'Érvénytelen vagy lejárt token.'}), 400
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'error': 'Felhasználó nem található.'}), 404
+    
+    user.password = generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
+    db.session.commit()
+    
+    return jsonify({'message': 'A jelszó sikeresen megváltozott.'}), 200
+
+
+
+######################################################################################
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

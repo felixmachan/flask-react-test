@@ -41,6 +41,7 @@ function Login() {
       console.log(data.message);
       console.log("Sikeres bejelentkezés:", data);
       navigate("/");
+      window.location.reload(); // újratöltés a frissített állapotért
     } catch (err) {
       setError(err.message);
     } finally {
@@ -136,7 +137,7 @@ function Login() {
               </GoogleOAuthProvider>
             </form>
             <div className="text-center mt-3">
-              <a href="#">Elfelejtetted a jelszavad?</a>
+              <Link to="/forgot-password">Elfelejtetted a jelszavad?</Link>
             </div>
           </main>
         </div>

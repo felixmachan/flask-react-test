@@ -16,6 +16,8 @@ import Register from "./components/Register.jsx";
 import Profile from "./components/Profile.jsx";
 import { AuthProvider } from "./components/AuthContext.jsx";
 import ConfirmEmail from "./components/ConfirmEmail.jsx";
+import ResetPassword from "./components/ResetPassword.jsx";
+import ForgotPassword from "./components/ForgotPassword.jsx";
 
 // 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 
@@ -34,6 +36,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/confirm/:token" element={<ConfirmEmail />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
           </Routes>
           <Footer />
         </AuthProvider>

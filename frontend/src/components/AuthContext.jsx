@@ -8,6 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [authChanged, setAuthChanged] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,11 +37,13 @@ export const AuthProvider = ({ children }) => {
     console.log("LOGIN: userData érkezett:", userData);
     localStorage.setItem("token", token);
     setUser(userData);
+    setAuthChanged((prev) => prev + 1); // trigger újra
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
+    setAuthChanged((prev) => prev + 1);
     navigate("/"); // vagy "/login", ha azt szeretnéd
   };
 
