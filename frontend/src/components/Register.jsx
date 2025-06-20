@@ -111,8 +111,10 @@ function Register() {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               onBlur={() => {
-                if (firstName.trim() !== "") {
+                if (firstName.trim() !== "" && firstName.length > 2) {
                   setShowGreeting(true);
+                } else {
+                  setShowGreeting(false);
                 }
               }}
             />

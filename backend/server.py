@@ -31,7 +31,7 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '../frontend/', 
 
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=["http://localhost:5173", "http://192.168.1.2:5173"])
+CORS(app, supports_credentials=True)
 
 mail = Mail(app)
 
