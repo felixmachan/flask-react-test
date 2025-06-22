@@ -42,7 +42,13 @@ function Profile() {
   const [hasNumber, setHasNumber] = useState(false);
   const [hasUppercase, setHasUppercase] = useState(false);
 
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showMatchInfo, setShowMatchInfo] = useState(false);
+  const passwordsMatch =
+    password && confirmPassword && password === confirmPassword;
+
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const logout = useAuth().logout;
   const { user } = useAuth();
@@ -70,8 +76,12 @@ function Profile() {
         setLastName(data.lname || "");
         setEmail(data.email || "");
         setSelectedDate(new Date(data.date_of_birth) || new Date());
-        setComplaints(data.complaints || []);
-        // szükség szerint állíts be egyéb mezőket is
+        setComplaints(
+          (data.complaints || []).map((c) => ({
+            value: c,
+            label: c,
+          }))
+        );
       })
       .catch((err) => {
         console.error(err);
@@ -83,7 +93,44 @@ function Profile() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+    setSuccessMessage("");
     const token = localStorage.getItem("token");
+
+    const newErrors = [];
+
+    // Validációk
+    if (password && password !== confirmPassword) {
+      newErrors.push("A jelszavak nem egyeznek.");
+    }
+    if (password && password.length < 8) {
+      newErrors.push("A jelszónak legalább 8 karakter hosszúnak kell lennie.");
+    }
+    if (password && !/\d/.test(password)) {
+      newErrors.push("A jelszónak tartalmaznia kell számot.");
+    }
+    if (password && !/[A-Z]/.test(password)) {
+      newErrors.push("A jelszónak tartalmaznia kell nagybetűt.");
+    }
+
+    if (newErrors.length > 0) {
+      setErrors(newErrors);
+      setLoading(false);
+      return;
+    }
+
+    // Ha nincs hiba:
+    setErrors([]);
+
+    const payload = {
+      fname: firstName,
+      lname: lastName,
+      date_of_birth: selectedDate.toISOString().split("T")[0],
+      complaints: complaints.map((c) => c.value),
+    };
+
+    if (password) {
+      payload.password = password;
+    }
 
     fetch("http://localhost:5000/api/change-data", {
       method: "PUT",
@@ -91,25 +138,21 @@ function Profile() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        fname: firstName,
-        lname: lastName,
-        date_of_birth: selectedDate.toISOString().split("T")[0],
-        complaints: complaints.map((c) => c.value), // vagy label, ha az az azonosító
-        password: password, // lehet üres is, backend kezeli
-      }),
+      body: JSON.stringify(payload),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Mentés sikertelen");
         return res.json();
       })
       .then((data) => {
-        setPassword(""); // jelszó mező ürítése
+        setPassword("");
+        setConfirmPassword("");
         setSuccessMessage("Profil sikeresen frissítve!");
         setTimeout(() => setSuccessMessage(""), 3000);
       })
       .catch((err) => {
         console.error("Hiba a mentés során:", err);
+        setErrors(["Hiba történt a profil mentése során."]);
       })
       .finally(() => {
         setLoading(false);
@@ -186,7 +229,7 @@ function Profile() {
             </div>
 
             <div className="row">
-              <label htmlFor="validationDefault03">Jelszó</label>
+              <label htmlFor="validationDefault03">Új jelszó</label>
               <input
                 type="password"
                 className="form-control reg"
@@ -204,6 +247,29 @@ function Profile() {
                 }}
               />
             </div>
+            <div className="row">
+              <label htmlFor="validationDefault04">Jelszó megerősítése</label>
+              <input
+                type="password"
+                className="form-control reg"
+                id="validationDefault04"
+                placeholder="Jelszó megerősítése"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onFocus={() => setShowMatchInfo(true)}
+                onBlur={() => setShowMatchInfo(false)}
+              />
+            </div>
+            {showMatchInfo && (
+              <div className="text-center mt-2">
+                <strong>Egyezés: </strong>
+                {passwordsMatch ? (
+                  <span className="text-success">✅</span>
+                ) : (
+                  <span className="text-danger">❌</span>
+                )}
+              </div>
+            )}
 
             {isPasswordFocused && (
               <div className="password-hints">
@@ -253,6 +319,15 @@ function Profile() {
             {successMessage && (
               <div className="alert alert-success text-center" role="alert">
                 {successMessage}
+              </div>
+            )}
+            {errors.length > 0 && (
+              <div className="alert alert-danger" role="alert">
+                <ul className="mb-0">
+                  {errors.map((err, i) => (
+                    <li key={i}>{err}</li>
+                  ))}
+                </ul>
               </div>
             )}
 
