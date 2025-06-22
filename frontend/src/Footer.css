@@ -1,37 +1,40 @@
 .footer {
-    background-color: #133E87;
-    color: white; /* Fehér szöveg */
+  background-color: #133e87;
+  color: white; /* Fehér szöveg */
 }
-.footer p, .footer li {
-    color: white !important;
-  }
-  .footp{
-    color: white !important;
-  }
+.footer p,
+.footer li {
+  color: white !important;
+}
+.footp {
+  color: white !important;
+}
 
-.footwave{
+.footwave {
   width: 100%;
   display: block;
   margin: 0 auto;
   object-fit: cover;
   overflow: -moz-hidden-unscrollable;
-    
 }
 .container-fluid {
-    margin-top: 0px;
+  margin-top: 0px;
 }
-footer{
-    margin-top: 0px;
-    width: 100%;
+footer {
+  margin-top: 0px;
+  width: 100%;
 }
 
-.footer-wrapper{
-    margin-top: 50px;
-    width: 100%;
+.footer-wrapper {
+  margin-top: 50px;
+  width: 100%;
+}
+.developer {
+  color: gray;
 }
 
 @media (max-width: 768px) {
-    .footwave {
-      width: 100%; /* Kép szélessége automatikusan igazodik telefonos nézethez */
-    }
+  .footwave {
+    width: 100%;
   }
+}

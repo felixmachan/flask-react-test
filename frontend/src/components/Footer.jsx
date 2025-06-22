@@ -9,6 +9,10 @@ function Footer() {
         <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-0">
           <p className="col-md-4 mb-0 text-body-secondary footp">
             © 2025 TalpPont
+            <br />
+            <span className="developer">
+              Full Stack fejlesztés: Machán Félix
+            </span>
           </p>
 
           <a
