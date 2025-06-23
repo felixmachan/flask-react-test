@@ -11,7 +11,7 @@ from sqlalchemy.exc import NoResultFound
 import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import requests
 
 import jwt
@@ -24,6 +24,7 @@ from email.utils import formataddr
 from email.message import EmailMessage
 
 from itsdangerous import URLSafeTimedSerializer
+
 
 
 
@@ -98,8 +99,31 @@ class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     booking_datetime = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(20), default="active")  # active / cancelled / completed
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship('User', back_populates='bookings')
+
+class WorkingHours(db.Model):
+    __tablename__ = 'working_hours'
+    id = db.Column(db.Integer, primary_key=True)
+    weekday = db.Column(db.Integer, nullable=False)  # 0 = hétfő, ..., 6 = vasárnap
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+
+class UnavailableSlot(db.Model):
+    __tablename__ = 'unavailable_slots'
+    id = db.Column(db.Integer, primary_key=True)
+    start_datetime = db.Column(db.DateTime, nullable=False)
+    end_datetime = db.Column(db.DateTime, nullable=False)
+    reason = db.Column(db.String(200))
+
+class SpecialDay(db.Model):
+    __tablename__ = 'special_days'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False, unique=True)
+    start_time = db.Column(db.Time, nullable=True)  # null = zárva
+    end_time = db.Column(db.Time, nullable=True)
 
 
 
@@ -552,5 +576,71 @@ def reset_password(token):
 
 ######################################################################################
 
+
+
+
+
+@app.route("/api/available-slots", methods=["GET"])
+def get_available_slots():
+    date_str = request.args.get("date")  # várjuk pl. 2025-07-12
+    if not date_str:
+        return jsonify({"error": "date paraméter hiányzik"}), 400
+
+    try:
+        date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return jsonify({"error": "Hibás dátumformátum"}), 400
+
+    weekday = date.weekday()  # 0 = hétfő
+
+    # SpecialDay felülírja?
+    special_day = SpecialDay.query.filter_by(date=date).first()
+    if special_day:
+        if not special_day.start_time or not special_day.end_time:
+            return jsonify([])  # teljes nap zárva
+        start_time = special_day.start_time
+        end_time = special_day.end_time
+    else:
+        wh = WorkingHours.query.filter_by(weekday=weekday).first()
+        if not wh:
+            return jsonify([])  # nincs munkaidő aznap
+        start_time = wh.start_time
+        end_time = wh.end_time
+
+    # Időpontgenerálás
+    slot_length = 60  # percben
+    slots = []
+    current = datetime.combine(date, start_time)
+    end = datetime.combine(date, end_time)
+
+    # már foglalt időpontok
+    existing_bookings = {b.booking_datetime for b in Booking.query.filter(
+        Booking.booking_datetime >= current,
+        Booking.booking_datetime < end,
+        Booking.status == "active"
+    ).all()}
+
+    # tiltott időszakok
+    blocks = UnavailableSlot.query.filter(
+        UnavailableSlot.start_datetime <= end,
+        UnavailableSlot.end_datetime >= current
+    ).all()
+
+    def is_blocked(dt):
+        return any(block.start_datetime <= dt < block.end_datetime for block in blocks)
+
+    while current + timedelta(minutes=slot_length) <= end:
+        if current not in existing_bookings and not is_blocked(current):
+            slots.append(current.strftime("%H:%M"))
+        current += timedelta(minutes=slot_length)
+
+
+    """ for wh in WorkingHours.query.all():
+        print(wh.weekday, wh.start_time, wh.end_time) """
+    print(slots)
+    return jsonify(slots)
+
+###########################################
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+        app.run(host="0.0.0.0", port=5000, debug=True)

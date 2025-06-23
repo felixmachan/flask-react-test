@@ -1,0 +1,57 @@
+.datepicker-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+}
+
+.datepicker-wrapper {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  width: 80%;
+  background-color: #fafafa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.datepicker-times {
+  width: 100%;
+}
+
+.slot-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.slot-card {
+  background-color: #f0f8ff;
+  border: 1px solid #bcd;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+  flex: 0 0 auto;
+}
+
+.slot-card:hover {
+  background-color: #e0f0ff;
+}
+
+.slot-card.selected {
+  background-color: #a0c4ff;
+  border-color: #6495ed;
+}
+
+@media (max-width: 600px) {
+  .slot-card {
+    flex: 1 1 45%;
+    text-align: center;
+  }
+}

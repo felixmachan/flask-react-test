@@ -18,6 +18,7 @@ import { AuthProvider } from "./components/AuthContext.jsx";
 import ConfirmEmail from "./components/ConfirmEmail.jsx";
 import ResetPassword from "./components/ResetPassword.jsx";
 import ForgotPassword from "./components/ForgotPassword.jsx";
+import DatePickerComponent from "./components/DatePickerComponent.jsx";
 
 // 👇 Új komponens, ami Router-en belül lesz, így működik benne a useNavigate
 
@@ -29,7 +30,7 @@ function App() {
           <BasicExample />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/appointments" element={<Appointments />} />
+            <Route path="/appointments" element={<DatePickerComponent />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/services" element={<Services />} />
             <Route path="/login" element={<Login />} />
