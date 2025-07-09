@@ -1,57 +1,107 @@
+/* Alap layout */
 .datepicker-container {
   display: flex;
-  justify-content: center;
-  padding: 20px;
-  width: 100%;
+  justify-content: space-evenly;
+  gap: 40px;
+  flex-wrap: wrap;
+  height: 100%;
 }
 
-.datepicker-wrapper {
-  border: 1px solid #ccc;
-  border-radius: 10px;
+.booking-form {
+  width: 60%;
+  background-color: #f8f9fa;
   padding: 20px;
-  width: 80%;
-  background-color: #fafafa;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* A naptár oszlop */
+.datepick-col {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  justify-content: center;
+}
+
+/* A naptár maga */
+.daypicker-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
 }
 
 .datepicker-times {
-  width: 100%;
+  flex: 1;
 }
 
+/* Wrapper kártya stílus */
+.row.wrapper {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Időpontok megjelenítése */
+/* Slot kártyák */
 .slot-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: flex-start;
 }
 
 .slot-card {
-  background-color: #f0f8ff;
-  border: 1px solid #bcd;
   padding: 10px 15px;
-  border-radius: 8px;
-  text-align: center;
-  font-weight: 500;
+  background-color: #e0e0e0;
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.2s;
-  flex: 0 0 auto;
+  user-select: none;
+  transition: all 0.2s;
 }
 
-.slot-card:hover {
-  background-color: #e0f0ff;
+.rdp-month {
+  margin: 20px;
 }
 
 .slot-card.selected {
-  background-color: #a0c4ff;
-  border-color: #6495ed;
+  background-color: #133e87;
+  color: white;
 }
 
-@media (max-width: 600px) {
-  .slot-card {
-    flex: 1 1 45%;
-    text-align: center;
+.rdp-root {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.rdp {
+  --rdp-cell-size: 45px !important; /* alapméret kis képernyőn */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (min-width: 768px) {
+  .rdp {
+    --rdp-cell-size: 60px !important; /* nagyobb napméret */
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .rdp {
+    --rdp-cell-size: 75px !important; /* még nagyobb napméret nagy kijelzőn */
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .row.wrapper {
+    width: 98%;
+  }
+}
+
+@media screen and (max-width: 1370px) {
+  .row.wrapper {
+    width: 80%;
   }
 }

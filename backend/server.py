@@ -98,6 +98,10 @@ class Booking(db.Model):
     __tablename__ = 'bookings'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    guest_email = db.Column(db.String(120), nullable=True)
+    guest_name = db.Column(db.String(50))
+    guest_phone = db.Column(db.String(50))
+    note = db.Column(db.String(200), nullable=True)  # optional note for the booking
     booking_datetime = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), default="active")  # active / cancelled / completed
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -641,6 +645,83 @@ def get_available_slots():
     return jsonify(slots)
 
 ###########################################
+
+@app.route("/api/book-appointment", methods=["POST"])
+@jwt_required(optional=True)
+def book_appointment():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    print(data)
+
+    date_str = data.get("date")
+    time_str = data.get("time")
+    note = data.get("note", "")
+    complaint_text = data.get("complaint", "")
+
+    if not date_str or not time_str:
+        return jsonify({"error": "Hiányzik dátum vagy időpont"}), 400
+
+    try:
+        dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+    except ValueError:
+        return jsonify({"error": "Hibás dátum vagy idő formátum"}), 400
+
+    existing = Booking.query.filter_by(booking_datetime=dt, status="active").first()
+    if existing:
+        return jsonify({"error": "Ez az időpont már foglalt"}), 409
+
+    if user_id:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "Felhasználó nem található"}), 404
+
+        booking = Booking(
+            user_id=user.id,
+            booking_datetime=dt,
+            note=note,
+            status="active",
+            guest_name=None,
+            guest_email=None,
+            guest_phone=None,
+        )
+    else:
+        name = data.get("name")
+        email = data.get("email")
+        phone = data.get("phone")
+        if not name or not email or not phone:
+            return jsonify({"error": "Vendégadatok hiányoznak"}), 400
+
+        booking = Booking(
+            user_id=None,
+            booking_datetime=dt,
+            note=note,
+            status="active",
+            guest_name=name,
+            guest_email=email,
+            guest_phone=phone,
+        )
+
+    # Panasz kezelése, ha van
+    if complaint_text:
+        complaint = Complaint.query.filter_by(description=complaint_text).first()
+        if not complaint:
+            complaint = Complaint(description=complaint_text)
+            db.session.add(complaint)
+            db.session.flush()
+        if user_id:
+            uc = UserComplaint(user_id=user_id, complaint_id=complaint.id)
+            db.session.add(uc)
+
+    db.session.add(booking)
+    db.session.commit()
+
+    return jsonify({"message": "Foglalás rögzítve"}), 201
+
+
+
+###########################################################
+
+
 
 if __name__ == '__main__':
         app.run(host="0.0.0.0", port=5000, debug=True)
